@@ -27,9 +27,9 @@ const Post = ({ p }) => {
           <div className="post_headerDescription">
             <p>{post}</p>
           </div>
+        {image && <img style={{ position: 'relative', maxWidth: '100%', width:"100%" }} src={image} alt="" />}
         </div>
-        {image && <img style={{ position: 'relative', maxWidth: '100%' }} src={image} alt="" />}
-        {video && <video style={{ position: 'relative', maxWidth: '100%' }} src={video} controls ></video>}
+        {video && <video style={{ position: 'relative', maxWidth: '100%', justifyContent:'center' }} src={video} controls ></video>}
 
         <div className="post_footer">
           <ChatBubbleOutlineIcon fontSize="small" />

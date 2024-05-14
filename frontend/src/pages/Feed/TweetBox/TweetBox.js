@@ -43,13 +43,15 @@ const TweetBox = () => {
         profilePhoto: userProfilePic,
         post: post,
         image: imageURL,
+        video: videoURL,
         username: username,
         name: name,
         email: email,
       };
-      console.log(userPost);
+      // console.log(userPost);
       setPost("");
       setImageURL("");
+      setVideoURL("");
       fetch("https://twitter-qgxu.onrender.com/posts", {
         method: "POST",
         headers: {
@@ -70,7 +72,7 @@ const TweetBox = () => {
   const handleUploadImage = (e) => {
     setIsLoading(true);
     const image = e.target.files[0];
-    console.log(image);
+    // console.log(image);
 
     const formData = new FormData();
     formData.set("image", image);
@@ -82,7 +84,7 @@ const TweetBox = () => {
 
       .then((res) => {
         setImageURL(res.data.data.display_url);
-        console.log(res.data.data.display_url);
+        // console.log(res.data.data.display_url);
         setIsLoading(false);
       })
       .catch((error) => {
