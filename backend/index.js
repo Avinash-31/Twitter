@@ -18,15 +18,6 @@ app.get("/", (req, res) => {
 const uri = process.env.MONGO_URL;
 
 const client = new MongoClient(uri, {});
-// const connectDB = async () => {
-//   try {
-//     const con = await mongoose.connect(uri, {});
-//     console.log(`MongoDB Connected: ${con.connection.host}`);
-//   } catch (error) {
-//     console.error(`Error: ${error.message}`);
-//     process.exit(1);
-//   }
-// };
 
 async function run() {
   try {
