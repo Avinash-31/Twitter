@@ -11,7 +11,7 @@ import UseLoggedInUser from "../hooks/UseLoggedInUser";
 const Home = () => {
   const user = useAuthState(auth);
   const [loggedInUser] = UseLoggedInUser();
-  console.log(loggedInUser);
+  // console.log(loggedInUser);
   const handleLogout = () => {
     signOut(auth);
   };

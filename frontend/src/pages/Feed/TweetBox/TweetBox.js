@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import { Avatar, Button } from "@mui/material";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
+import AddVideo from '@mui/icons-material/VideoCall';
 import "./TweetBox.css";
 import axios from "axios";
 import UseLoggedInUser from "../../../hooks/UseLoggedInUser";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
+import { ThreeDots } from "react-loader-spinner"
 
 const TweetBox = () => {
   const [post, setPost] = useState("");
   const [imageURL, setImageURL] = useState("");
+  const [videoURL, setVideoURL] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [videoLoading, setVideoLoading] = useState(false);
+  const [isVidLoading, setIsVidLoading] = useState(false);
   const [name, setName] = useState("");
   const [username, setUsername] = useState(" ");
   const [loggedInUser] = UseLoggedInUser();
@@ -89,26 +92,26 @@ const TweetBox = () => {
   };
 
   const handleUploadVideo = (e) => {
-    setIsLoading(true);
+    setIsVidLoading(true);
     const video = e.target.files[0];
     const data = new FormData();
     data.append("file", video);
     data.append("upload_preset", "twitter");
-    data.append("cloud_name", "");
+    data.append("cloud_name", "daeq5e65i");
 
-    fetch("https://api.cloudinary.com/v1_1/df9xugdxg/video/upload", {
+    fetch("https://api.cloudinary.com/v1_1/daeq5e65i/video/upload", {
       method: "post",
       body: data,
     })
       .then((res) => res.json())
       .then((data) => {
         setVideoURL(data.url.toString());
-        // console.log(data.url.toString());
-        setIsLoading(false);
+        console.log(data.url.toString());
+        setIsVidLoading(false);
       })
       .catch((err) => {
         console.log(err);
-        setIsLoading(false);
+        setIsVidLoading(false);
       });
   }
 
@@ -128,7 +131,16 @@ const TweetBox = () => {
         <div className="imageIcon_tweetButton">
           <label htmlFor="image" className="imageIcon">
             {isLoading ? (
-              <p>Loading...</p>
+              <ThreeDots
+                visible={true}
+                height="80"
+                width="80"
+                color="#4fa94d"
+                radius="9"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
             ) : (
               <p>
                 {imageURL ? (
@@ -145,26 +157,35 @@ const TweetBox = () => {
             className="imageInput"
             onChange={handleUploadImage}
           />
-          <div className="imageIcon_tweetButton">
-            <label htmlFor="video" className="imageIcon">
-              {videoLoading ? (
-                <p>Loading...</p>
-              ) : (
-                <p>{videoURL ? "Video uploaded" : "Upload Video"}</p>
-              )}
-            </label>
-            <input
-              type="file"
-              id="video"
-              accept="video/*"
-              className="imageInput"
-              onChange={handleUploadVideo}
-            />
-          </div>
-          <Button className="tweetBox__tweetButton" type="submit">
-            Tweet
-          </Button>
         </div>
+        <div className="imageIcon_tweetButton">
+          <label htmlFor="video" className="imageIcon">
+            {isVidLoading ? (
+              <ThreeDots
+                visible={true}
+                height="80"
+                width="80"
+                color="#4fa94d"
+                radius="9"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
+            ) : (
+              <p>{videoURL ? "Video uploaded" : (<AddVideo />)}</p>
+            )}
+          </label>
+          <input
+            type="file"
+            id="video"
+            accept="video/*"
+            className="imageInput"
+            onChange={handleUploadVideo}
+          />
+        </div>
+        <Button className="tweetBox__tweetButton" type="submit">
+          Tweet
+        </Button>
       </form>
     </div>
   );

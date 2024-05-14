@@ -8,7 +8,7 @@ import PublishIcon from "@mui/icons-material/Publish";
 import "./Post.css";
 
 const Post = ({ p }) => {
-  const { name, username, image, post, profilePhoto } = p;
+  const { name, username, image, video, post, profilePhoto } = p;
   return (
     <div className="post">
       <div className="post_avatar">
@@ -28,7 +28,9 @@ const Post = ({ p }) => {
             <p>{post}</p>
           </div>
         </div>
-        <img src={image} alt="" />
+        {image && <img style={{ position: 'relative', maxWidth: '100%' }} src={image} alt="" />}
+        {video && <video style={{ position: 'relative', maxWidth: '100%' }} src={video} controls ></video>}
+
         <div className="post_footer">
           <ChatBubbleOutlineIcon fontSize="small" />
           <RepeatIcon fontSize="small" />
