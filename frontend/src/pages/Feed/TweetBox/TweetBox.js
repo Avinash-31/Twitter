@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Avatar, Button } from "@mui/material";
+import { Avatar, Button, Modal, TextField } from "@mui/material";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import AddVideo from '@mui/icons-material/VideoCall';
 import "./TweetBox.css";
@@ -21,6 +21,48 @@ const TweetBox = () => {
   const [user] = useAuthState(auth);
   const email = user?.email;
 
+  // For otp verfication
+  const [otp, setOtp] = useState('');
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+
+  // Function to send OTP
+  const sendOtp = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/sendotp', { email: user.email });
+      if (response.data === 'sent otp') {
+        setIsOtpSent(true);
+        setOpenModal(true);
+      }
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+    }
+  };
+
+  // Function to verify OTP
+  const verifyOtp = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/verify', { email: user.email, otp });
+      if (response.data === 'Verified') {
+        setIsOtpVerified(true);
+        setOpenModal(false);
+      }
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+    }
+  };
+
+  // Modal for OTP input
+  const otpModal = (
+    <Modal open={openModal} onClose={() => setOpenModal(false)}>
+      <div>
+        <TextField label="OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
+        <Button onClick={verifyOtp}>Verify OTP</Button>
+      </div>
+    </Modal>
+  );
+
   const userProfilePic = loggedInUser[0]?.profileImage
     ? loggedInUser[0]?.profileImage
     : "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png";
@@ -28,7 +70,7 @@ const TweetBox = () => {
   const handleTweet = (e) => {
     e.preventDefault();
     if (user.providerData[0].providerId === "password") {
-      fetch(`https://twitter-qgxu.onrender.com/loggedInUser?email=${email}`)
+      fetch(`http://localhost:5000/loggedInUser?email=${email}`)
         .then((res) => res.json())
         .then((data) => {
           setUsername(data[0].userName);
@@ -52,7 +94,7 @@ const TweetBox = () => {
       setPost("");
       setImageURL("");
       setVideoURL("");
-      fetch("https://twitter-qgxu.onrender.com/posts", {
+      fetch("http://localhost:5000/posts", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -189,6 +231,7 @@ const TweetBox = () => {
           Tweet
         </Button>
       </form>
+      {isOtpSent ? otpModal : <Button onClick={sendOtp}>Send OTP</Button>}
     </div>
   );
 };

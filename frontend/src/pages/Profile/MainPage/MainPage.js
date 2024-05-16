@@ -23,7 +23,7 @@ const MainPage = ({ user }) => {
     : "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png";
 
   useEffect(() => {
-    fetch(`https://twitter-qgxu.onrender.com/userPosts?email=${user?.email}`)
+    fetch(`http://localhost:5000/userPosts?email=${user?.email}`)
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);
@@ -54,7 +54,7 @@ const MainPage = ({ user }) => {
         };
         if (url) {
           axios.patch(
-            `https://twitter-qgxu.onrender.com/userUpdates/${user?.email}`,
+            `http://localhost:5000/userUpdates/${user?.email}`,
             useCoverImage
           );
         }
@@ -87,7 +87,7 @@ const MainPage = ({ user }) => {
         };
         if (url) {
           axios.patch(
-            `https://twitter-qgxu.onrender.com/userUpdates/${user?.email}`,
+            `http://localhost:5000/userUpdates/${user?.email}`,
             useprofileImage
           );
         }

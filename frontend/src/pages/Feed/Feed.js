@@ -6,7 +6,7 @@ const Feed = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetch("https://twitter-qgxu.onrender.com/posts")
+    fetch("http://localhost:5000/posts")
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);

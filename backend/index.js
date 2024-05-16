@@ -3,8 +3,16 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const { MongoClient } = require("mongodb");
 const dotenv = require("dotenv");
-
+var bodyParser = require('body-parser');
 const app = express();
+app.use(cors('*'));
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+var nm = require('nodemailer');
+let savedOTPS = {
+
+};
+
 const port = 5000;
 dotenv.config();
 
@@ -69,11 +77,83 @@ async function run() {
       const result = await userCollection.updateOne(filter, updateDoc, options);
       res.send(result);
     });
+
+    var transporter = nm.createTransport(
+      {
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+          user: 'avinash.80031@gmail.com',
+          pass: 'olyhqghssklonbuh'
+        }
+      }
+    );
+
+    app.post('/sendotp', (req, res) => {
+      let email = req.body.email;
+      let digits = '0123456789';
+      let limit = 4;
+      let otp = ''
+      for (i = 0; i < limit; i++) {
+        otp += digits[Math.floor(Math.random() * 10)];
+      }
+      var options = {
+        from: 'avinash.80031@gmail.com',
+        to: `${email}`,
+        subject: "Testing node emails",
+        html: `<p>Enter the otp: ${otp} to verify your email address</p>`
+      };
+
+      transporter.sendMail(
+        options, function (error, info) {
+          if (error) {
+            console.log(error);
+            res.status(500).send("couldn't send")
+          }
+          else {
+            savedOTPS[email] = otp;
+            setTimeout(
+              () => {
+                delete savedOTPS.email
+              }, 60000
+            )
+            res.send("sent otp")
+          }
+
+        }
+      )
+    })
+
+    app.post('/verify', (req, res) => {
+      let email = req.body.email;
+      let otp = req.body.otp;
+
+      if (!savedOTPS.hasOwnProperty(email)) {
+        return res.status(400).send("Email not found");
+      }
+
+      if (!savedOTPS[email]) {
+        return res.status(400).send("OTP expired");
+      }
+      console.log(`Received email: ${email}`);
+      console.log(`Received OTP: ${otp}`);
+      console.log(`Stored OTP: ${savedOTPS[email]}`);
+      if (savedOTPS[email] == otp) {
+        delete savedOTPS[email];
+        res.send("Verified");
+      } else {
+        res.status(500).send("Invalid OTP");
+      }
+    });
   } catch (error) {
     console.log(error);
   }
 }
 run().catch(console.dir);
+
+
+
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
