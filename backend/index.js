@@ -63,6 +63,19 @@ async function run() {
       res.send(result);
     });
 
+    app.patch("/posts/:id/upvote", async (req, res) => {
+      const { id } = req.params;
+      const post = await postCollection.findOne({ _id: new mongoose.Types.ObjectId(id) });
+      if (!post) {
+        return res.status(404).send("Post not found");
+      }
+      const updatedPost = await postCollection.updateOne(
+        { _id: new mongoose.Types.ObjectId(id) },
+        { $set: { upvotes: post.upvotes + 1 } }
+      );
+      res.send(updatedPost);
+    });
+
     app.post("/register", async (req, res) => {
       const user = req.body;
       const result = await userCollection.insertOne(user);

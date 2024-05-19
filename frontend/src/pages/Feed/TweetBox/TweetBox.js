@@ -41,6 +41,10 @@ const TweetBox = () => {
   // Function to send OTP
   const sendOtp = async () => {
     try {
+      setOtp1('');
+      setOtp2('');
+      setOtp3('');
+      setOtp4('');
       const response = await axios.post('http://localhost:5000/sendotp', { email: user.email });
       if (response.data === 'sent otp') {
         setIsOtpSent(true);
@@ -55,10 +59,6 @@ const TweetBox = () => {
   const verifyOtp = async () => {
     try {
       setOtp(otp1 + otp2 + otp3 + otp4);
-      setOtp1('');
-      setOtp2('');
-      setOtp3('');
-      setOtp4('');
       const response = await axios.post('http://localhost:5000/verify', { email: user.email, otp });
       if (response.data === 'Verified') {
         setIsOtpVerified(true);
@@ -83,11 +83,16 @@ const TweetBox = () => {
             setIsVidLoading(false);
           })
           .catch((err) => {
+            
             console.log(err);
             setIsVidLoading(false);
           });
         setIsOtpVerified(false);
       }
+      if(response.data === 'Invalid OTP'){
+        alert("invalid otp")
+      }
+      
     } catch (error) {
       console.error('Error verifying OTP:', error);
     }
@@ -189,6 +194,7 @@ const TweetBox = () => {
         username: username,
         name: name,
         email: email,
+        upvotes: videoURL ? 1 : 0, // Add this line
       };
       // console.log(userPost);
       setPost("");
