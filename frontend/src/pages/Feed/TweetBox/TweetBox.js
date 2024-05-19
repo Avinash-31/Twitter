@@ -21,6 +21,7 @@ const TweetBox = () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState(" ");
   const [loggedInUser] = UseLoggedInUser();
+  const [validVideo, setValidVideo] = useState(false);
   const [user] = useAuthState(auth);
   const email = user?.email;
 
@@ -85,7 +86,7 @@ const TweetBox = () => {
             console.log(err);
             setIsVidLoading(false);
           });
-          setIsOtpVerified(false);
+        setIsOtpVerified(false);
       }
     } catch (error) {
       console.error('Error verifying OTP:', error);
@@ -237,31 +238,33 @@ const TweetBox = () => {
 
 
   const handleUploadVideo = (e) => {
-    if (!isOtpVerified) {
-      sendOtp();
-    } else {
-      // alert("OTP is already verified. Please refresh the page to upload a new video.");
-      setIsVidLoading(true);
-      const video = document.getElementById("video").files[0];
-      const data = new FormData();
-      data.append("file", video);
-      data.append("upload_preset", "twitter");
-      data.append("cloud_name", process.env.REACT_APP_CLOUD_NAME);
-
-      fetch(process.env.REACT_APP_CLOUDINARY, {
-        method: "post",
-        body: data,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setVideoURL(data.url.toString());
-          console.log(data.url.toString());
-          setIsVidLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setIsVidLoading(false);
-        });
+    const videoFile = document.getElementById("video").files;
+    if (!videoFile.length) {
+      return;
+    }
+    const video = videoFile[0];
+    // Check video size (limit to 10MB)
+    const fileSize = video.size / (1024 * 1024); // in MB
+    if (fileSize > 10) {
+      alert("Video size should not exceed 10MB.");
+      return;
+    }
+    else {
+      // Check video duration (limit to 2 minutes)
+      const videoElement = document.createElement('video');
+      videoElement.src = URL.createObjectURL(video);
+      videoElement.addEventListener('loadedmetadata', function () {
+        if (videoElement.duration > 60) {
+          alert("Video length should not exceed 60 seconds.");
+          return;
+        }
+        else {
+          if (!isOtpVerified) {
+            sendOtp();
+          }
+        }
+      }, false);
+      setValidVideo(true);
     }
   }
 
