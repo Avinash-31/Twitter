@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Avatar, Button, Modal, TextField } from "@mui/material";
+import { Avatar, Box, Button, Modal, TextField } from "@mui/material";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import AddVideo from '@mui/icons-material/VideoCall';
 import "./TweetBox.css";
@@ -7,9 +7,12 @@ import axios from "axios";
 import UseLoggedInUser from "../../../hooks/UseLoggedInUser";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
-import { ThreeDots } from "react-loader-spinner"
+import { ThreeDots } from "react-loader-spinner";
 
 const TweetBox = () => {
+  // console.log(process.env.REACT_APP_IMBB);
+  // console.log(process.env.REACT_APP_CLOUDINARY);
+  // console.log(process.env.REACT_APP_CLOUD_NAME);
   const [post, setPost] = useState("");
   const [imageURL, setImageURL] = useState("");
   const [videoURL, setVideoURL] = useState("");
@@ -20,6 +23,13 @@ const TweetBox = () => {
   const [loggedInUser] = UseLoggedInUser();
   const [user] = useAuthState(auth);
   const email = user?.email;
+
+  // for otp
+  const [otp1, setOtp1] = useState('');
+  const [otp2, setOtp2] = useState('');
+  const [otp3, setOtp3] = useState('');
+  const [otp4, setOtp4] = useState('');
+
 
   // For otp verfication
   const [otp, setOtp] = useState('');
@@ -43,10 +53,39 @@ const TweetBox = () => {
   // Function to verify OTP
   const verifyOtp = async () => {
     try {
+      setOtp(otp1 + otp2 + otp3 + otp4);
+      setOtp1('');
+      setOtp2('');
+      setOtp3('');
+      setOtp4('');
       const response = await axios.post('http://localhost:5000/verify', { email: user.email, otp });
       if (response.data === 'Verified') {
         setIsOtpVerified(true);
         setOpenModal(false);
+
+        // video upload logic
+        setIsVidLoading(true);
+        const video = document.getElementById("video").files[0];
+        const data = new FormData();
+        data.append("file", video);
+        data.append("upload_preset", "twitter");
+        data.append("cloud_name", process.env.REACT_APP_CLOUD_NAME);
+
+        fetch(process.env.REACT_APP_CLOUDINARY, {
+          method: "post",
+          body: data,
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            setVideoURL(data.url.toString());
+            console.log(data.url.toString());
+            setIsVidLoading(false);
+          })
+          .catch((err) => {
+            console.log(err);
+            setIsVidLoading(false);
+          });
+          setIsOtpVerified(false);
       }
     } catch (error) {
       console.error('Error verifying OTP:', error);
@@ -54,12 +93,72 @@ const TweetBox = () => {
   };
 
   // Modal for OTP input
+
+  // style for modal
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    pt: 2,
+    px: 4,
+    pb: 3,
+  };
+
   const otpModal = (
-    <Modal open={openModal} onClose={() => setOpenModal(false)}>
-      <div>
-        <TextField label="OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
-        <Button onClick={verifyOtp}>Verify OTP</Button>
-      </div>
+    <Modal
+      open={openModal}
+      onClose={() => setOpenModal(false)}
+      aria-labelledby="parent-modal-title"
+      aria-describedby="parent-modal-description"
+    >
+      <Box sx={{ ...style, width: 400 }}>
+        <h2 id="parent-modal-title">Enter OTP to proceed</h2>
+        <p id="parent-modal-description">
+          We have sent otp to your mail {user.email}
+        </p>
+        <div className="otpField">
+          <TextField
+            value={otp1}
+            onChange={(e) => {
+              setOtp1(e.target.value.slice(0, 1));
+              if (e.target.value.length === 1) {
+                document.getElementById("otp2").focus();
+              }
+            }}
+          />
+          <TextField
+            id="otp2"
+            value={otp2}
+            onChange={(e) => {
+              setOtp2(e.target.value.slice(0, 1));
+              if (e.target.value.length === 1) {
+                document.getElementById("otp3").focus();
+              }
+            }}
+          />
+          <TextField
+            id="otp3"
+            value={otp3}
+            onChange={(e) => {
+              setOtp3(e.target.value.slice(0, 1));
+              if (e.target.value.length === 1) {
+                document.getElementById("otp4").focus();
+              }
+            }}
+          />
+          <TextField
+            id="otp4"
+            value={otp4}
+            onChange={(e) => setOtp4(e.target.value.slice(0, 1))}
+          />
+          <Button onClick={verifyOtp}>Verify OTP</Button>
+        </div>
+      </Box>
     </Modal>
   );
 
@@ -120,7 +219,7 @@ const TweetBox = () => {
     formData.set("image", image);
     axios
       .post(
-        "https://api.imgbb.com/1/upload?key=37fe4cb64c9314cb7d69dc88a1d6ff3f",
+        process.env.REACT_APP_IMBB,
         formData
       )
 
@@ -135,28 +234,35 @@ const TweetBox = () => {
       });
   };
 
-  const handleUploadVideo = (e) => {
-    setIsVidLoading(true);
-    const video = e.target.files[0];
-    const data = new FormData();
-    data.append("file", video);
-    data.append("upload_preset", "twitter");
-    data.append("cloud_name", "daeq5e65i");
 
-    fetch("https://api.cloudinary.com/v1_1/daeq5e65i/video/upload", {
-      method: "post",
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setVideoURL(data.url.toString());
-        console.log(data.url.toString());
-        setIsVidLoading(false);
+
+  const handleUploadVideo = (e) => {
+    if (!isOtpVerified) {
+      sendOtp();
+    } else {
+      // alert("OTP is already verified. Please refresh the page to upload a new video.");
+      setIsVidLoading(true);
+      const video = document.getElementById("video").files[0];
+      const data = new FormData();
+      data.append("file", video);
+      data.append("upload_preset", "twitter");
+      data.append("cloud_name", process.env.REACT_APP_CLOUD_NAME);
+
+      fetch(process.env.REACT_APP_CLOUDINARY, {
+        method: "post",
+        body: data,
       })
-      .catch((err) => {
-        console.log(err);
-        setIsVidLoading(false);
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          setVideoURL(data.url.toString());
+          console.log(data.url.toString());
+          setIsVidLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsVidLoading(false);
+        });
+    }
   }
 
   return (
@@ -231,7 +337,7 @@ const TweetBox = () => {
           Tweet
         </Button>
       </form>
-      {isOtpSent ? otpModal : <Button onClick={sendOtp}>Send OTP</Button>}
+      {otpModal}
     </div>
   );
 };

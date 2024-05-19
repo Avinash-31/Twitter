@@ -84,8 +84,8 @@ async function run() {
         port: 587,
         secure: false,
         auth: {
-          user: 'avinash.80031@gmail.com',
-          pass: 'olyhqghssklonbuh'
+          user: process.env.EMAIL,
+          pass: process.env.PASSWORD,
         }
       }
     );
@@ -99,7 +99,7 @@ async function run() {
         otp += digits[Math.floor(Math.random() * 10)];
       }
       var options = {
-        from: 'avinash.80031@gmail.com',
+        from: process.env.EMAIL,
         to: `${email}`,
         subject: "Testing node emails",
         html: `<p>Enter the otp: ${otp} to verify your email address</p>`

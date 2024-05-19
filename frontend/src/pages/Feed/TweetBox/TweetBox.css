@@ -53,3 +53,19 @@
 .imageInput {
   display: none;
 }
+
+.otpField{
+  display: flex;
+  width: 20rem;
+}
+
+.css-105qr5e{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#parent-modal-description{
+  display: flex;
+  width: max-content;
+}
