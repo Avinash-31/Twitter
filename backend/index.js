@@ -42,6 +42,12 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
       console.log(session);
       let emailto = session.customer_details.email
 
+      // Update user's subscription status
+      await userCollection.updateOne(
+        { email: emailto },
+        { $set: { isSubscribed: true } }
+      );
+
       // Then define and call a function to handle the event checkout.session.async_payment_succeeded
       let transporter = nm.createTransport(
         {
@@ -97,8 +103,7 @@ app.get("/", (req, res) => {
 const uri = process.env.MONGO_URL;
 
 const client = new MongoClient(uri, {});
-const paymentRoute = require('./routes/paymentRoute');
-app.use('/payment', paymentRoute);
+
 async function run() {
   try {
     console.log("Hello from server");
@@ -133,6 +138,19 @@ async function run() {
 
     app.post("/posts", async (req, res) => {
       const post = req.body;
+      const user = await userCollection.findOne({ email: post.email });
+
+      // If the user is not subscribed and has reached the post limit, return an error
+      const postLimit = 10; // Set your post limit here
+      if (!user.isSubscribed && user.postCount >= postLimit) {
+        return res.status(403).send('You have reached your post limit. Subscribe to create unlimited posts');
+      }
+
+      // Increment the user's post count
+      await userCollection.updateOne(
+        { email: post.email },
+        { $inc: { postCount: 1 } }
+      );
       const result = await postCollection.insertOne(post);
       res.send(result);
     });
@@ -152,6 +170,7 @@ async function run() {
 
     app.post("/register", async (req, res) => {
       const user = req.body;
+      user.postCount = 0; // Add this line
       const result = await userCollection.insertOne(user);
       res.send(result);
     });

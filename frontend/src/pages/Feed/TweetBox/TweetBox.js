@@ -37,6 +37,7 @@ const TweetBox = () => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [payOpenModal,setPayOpenModal] = useState(false);
 
   // Function to send OTP
   const sendOtp = async () => {
@@ -168,6 +169,31 @@ const TweetBox = () => {
     </Modal>
   );
 
+  const paymentModal = (
+    <Modal
+      open={payOpenModal}
+      onClose={() => setPayOpenModal(false)}
+      aria-labelledby="parent-modal-title"
+      aria-describedby="parent-modal-description"
+    >
+      <Box sx={{ ...style, width: 400 }}>
+        <h2 id="parent-modal-title">Choose a plus membership plan</h2>
+        <p id="parent-modal-description" style={{flexDirection:'column',justifyContent:'center'}}>
+          <h3>Monthly Plan</h3>
+          <p>Get access to premium features for a month</p>
+          <p>Unlimited posts for a month</p>
+          <p>₹ 99</p>
+          <button>Monthly</button>
+          <h3>Yearly Plan</h3>
+          <p>Get access to premium features for a year</p>
+          <p>Unlimited posts for a year</p>
+          <p>₹ 499</p>
+          <button>Yearly</button>
+        </p>
+      </Box>
+    </Modal>
+  );
+
   const userProfilePic = loggedInUser[0]?.profileImage
     ? loggedInUser[0]?.profileImage
     : "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png";
@@ -274,8 +300,15 @@ const TweetBox = () => {
     }
   }
 
+  const handlePayment = (e)=>{
+    e.preventDefault();
+    console.log("clicked");
+    setPayOpenModal(true);
+  }
+
   return (
     <div className="tweetBox">
+      <button onClick={handlePayment} style={{position:'relative',right:'-80%'}}>Plus membership</button>
       <form onSubmit={handleTweet}>
         <div className="tweetBox__input">
           <Avatar src={userProfilePic} />
@@ -346,6 +379,7 @@ const TweetBox = () => {
           Tweet
         </Button>
       </form>
+      {paymentModal}
       {otpModal}
     </div>
   );
