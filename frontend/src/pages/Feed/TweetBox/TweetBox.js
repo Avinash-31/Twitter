@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Avatar, Box, Button, Modal, TextField } from "@mui/material";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import AddVideo from '@mui/icons-material/VideoCall';
@@ -25,6 +25,9 @@ const TweetBox = () => {
   const [user] = useAuthState(auth);
   const email = user?.email;
 
+  const [postCount, setPostCount] = useState(0);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
   // for otp
   const [otp1, setOtp1] = useState('');
   const [otp2, setOtp2] = useState('');
@@ -37,7 +40,21 @@ const TweetBox = () => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [payOpenModal,setPayOpenModal] = useState(false);
+  const [payOpenModal, setPayOpenModal] = useState(false);
+  const [openPostLimitModal, setOpenPostLimitModal] = useState(false);
+
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/userStatus?email=${email}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setPostCount(data.postCount);
+        setIsSubscribed(data.isSubscribed);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [email]);
 
   // Function to send OTP
   const sendOtp = async () => {
@@ -84,16 +101,16 @@ const TweetBox = () => {
             setIsVidLoading(false);
           })
           .catch((err) => {
-            
+
             console.log(err);
             setIsVidLoading(false);
           });
         setIsOtpVerified(false);
       }
-      if(response.data === 'Invalid OTP'){
+      if (response.data === 'Invalid OTP') {
         alert("invalid otp")
       }
-      
+
     } catch (error) {
       console.error('Error verifying OTP:', error);
     }
@@ -178,7 +195,32 @@ const TweetBox = () => {
     >
       <Box sx={{ ...style, width: 400 }}>
         <h2 id="parent-modal-title">Choose a plus membership plan</h2>
-        <p id="parent-modal-description" style={{flexDirection:'column',justifyContent:'center'}}>
+        <p id="parent-modal-description" style={{ flexDirection: 'column', justifyContent: 'center' }}>
+          <h3>Monthly Plan</h3>
+          <p>Get access to premium features for a month</p>
+          <p>Unlimited posts for a month</p>
+          <p>₹ 99</p>
+          <button>Monthly</button>
+          <h3>Yearly Plan</h3>
+          <p>Get access to premium features for a year</p>
+          <p>Unlimited posts for a year</p>
+          <p>₹ 499</p>
+          <button>Yearly</button>
+        </p>
+      </Box>
+    </Modal>
+  );
+
+  const postLimitModal = (
+    <Modal
+      open={openPostLimitModal}
+      onClose={() => setOpenPostLimitModal(false)}
+      aria-labelledby="parent-modal-title"
+      aria-describedby="parent-modal-description"
+    >
+      <Box sx={{ ...style, width: 'auto', display : 'flex', flexDirection : 'column', justifyContent : 'center', alignItems : 'center' }}>
+        <h2 id="parent-modal-title">You have exceeded your Post limit!</h2>
+        <p id="parent-modal-description" style={{ flexDirection: 'column', justifyContent: 'center' }}>
           <h3>Monthly Plan</h3>
           <p>Get access to premium features for a month</p>
           <p>Unlimited posts for a month</p>
@@ -212,6 +254,11 @@ const TweetBox = () => {
       setName(user.displayName);
     }
     if (name) {
+      if (postCount > 9) {
+        // alert("You have reached your post limit. Please subscribe to post more");
+        setOpenPostLimitModal(true);
+        return;
+      }
       const userPost = {
         profilePhoto: userProfilePic,
         post: post,
@@ -300,7 +347,7 @@ const TweetBox = () => {
     }
   }
 
-  const handlePayment = (e)=>{
+  const handlePayment = (e) => {
     e.preventDefault();
     console.log("clicked");
     setPayOpenModal(true);
@@ -308,7 +355,7 @@ const TweetBox = () => {
 
   return (
     <div className="tweetBox">
-      <button onClick={handlePayment} style={{position:'relative',right:'-80%'}}>Plus membership</button>
+      <button onClick={handlePayment} style={{ position: 'relative', right: '-80%' }}>Plus membership</button>
       <form onSubmit={handleTweet}>
         <div className="tweetBox__input">
           <Avatar src={userProfilePic} />
@@ -319,6 +366,10 @@ const TweetBox = () => {
             value={post}
             required
           />
+        </div>
+        <div>
+          <p>Post Count: {postCount}</p>
+          <p>Subscription Status: {isSubscribed ? 'Subscribed' : 'Not Subscribed'}</p>
         </div>
         <div className="imageIcon_tweetButton">
           <label htmlFor="image" className="imageIcon">
@@ -381,6 +432,7 @@ const TweetBox = () => {
       </form>
       {paymentModal}
       {otpModal}
+      {postLimitModal}
     </div>
   );
 };

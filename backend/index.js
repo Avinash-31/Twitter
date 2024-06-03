@@ -19,9 +19,7 @@ dotenv.config();
 app.use(cors());
 app.post('/webhook', express.raw({ type: 'application/json' }), async (request, response) => {
   const sig = request.headers['stripe-signature'];
-  console.log("Hello");
   let event;
-
   try {
     event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
   } catch (err) {
@@ -39,6 +37,17 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
       break;
     case 'checkout.session.completed':
       session = event.data.object;
+      const user = await userCollection.findOne({email : session.customer_details.email});
+      if(user){
+        await userCollection.updateOne(
+          {
+            email : session.customer_details.email
+          },
+          {
+            $set : {isSubscribed: true}
+          }
+        );
+      }
       console.log(session);
       let emailto = session.customer_details.email
 
@@ -106,7 +115,6 @@ const client = new MongoClient(uri, {});
 
 async function run() {
   try {
-    console.log("Hello from server");
     await client.connect();
     const postCollection = client.db("database").collection("posts");
     const userCollection = client.db("database").collection("users");
@@ -136,20 +144,33 @@ async function run() {
       res.send(posts);
     });
 
+    app.get("/userStatus",async(req,res)=>{
+      const email = req.query.email;
+      const user = await userCollection.findOne({email : email});
+      if(!user){
+        return res.status(404).send("User not found")
+      }
+      const {postCount,isSubscribed}=user;
+      res.json({
+        postCount,
+        isSubscribed
+      })
+    })
     app.post("/posts", async (req, res) => {
       const post = req.body;
       const user = await userCollection.findOne({ email: post.email });
 
       // If the user is not subscribed and has reached the post limit, return an error
       const postLimit = 10; // Set your post limit here
-      if (!user.isSubscribed && user.postCount >= postLimit) {
-        return res.status(403).send('You have reached your post limit. Subscribe to create unlimited posts');
-      }
+      // if (!user.isSubscribed && user.postCount >= postLimit) {
+      //   return res.status(403).send('You have reached your post limit. Subscribe to create unlimited posts');
+      // }
 
       // Increment the user's post count
       await userCollection.updateOne(
         { email: post.email },
         { $inc: { postCount: 1 } }
+        
       );
       const result = await postCollection.insertOne(post);
       res.send(result);
@@ -170,7 +191,8 @@ async function run() {
 
     app.post("/register", async (req, res) => {
       const user = req.body;
-      user.postCount = 0; // Add this line
+      user.isSubscribed = false;
+      user.postCount = 0;
       const result = await userCollection.insertOne(user);
       res.send(result);
     });

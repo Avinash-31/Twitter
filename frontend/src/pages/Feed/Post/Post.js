@@ -13,7 +13,7 @@ const Post = ({ p }) => {
   const { name, username, image, video, post, profilePhoto } = p;
   const [upvotes, setUpvotes] = useState(p.upvotes); // maintain a state for upvotes
   const [hasUpvoted, setHasUpvoted] = useState(false); // maintain a state for whether the user has upvoted
-
+  
   // function to handle upvote click
   const handleUpvote = async () => {
     if (!hasUpvoted) {
