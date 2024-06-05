@@ -8,10 +8,15 @@
 .post_body {
   flex: 1;
   padding: 10px;
+  width: 0rem;
 }
 
 .post_body > img {
   border-radius: 20px;
+}
+
+.post_header{
+  display: flex;
 }
 
 .post_footer {

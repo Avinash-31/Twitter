@@ -51,28 +51,29 @@ const Post = ({ p }) => {
 
   return (
     <div className="post">
-      <div className="post_avatar">
-        <Avatar src={profilePhoto} />
-      </div>
       <div className="post_body">
         <div className="post_header">
-          <div className="post_upvotes">
-            Upvotes: {video ? upvotes + 1 : upvotes}
+          <div className="post_avatar">
+            <Avatar src={profilePhoto} />
           </div>
           <div className="post_headerText">
             <h3>
               {name}{" "}
               <span className="post_headerSpecial">
-                {isSubscribed?<VerifiedIcon className="post_badge" />:null}
+                {isSubscribed ? <VerifiedIcon className="post_badge" /> : null}
                 @{username}
               </span>
             </h3>
           </div>
-          <div className="post_headerDescription">
-            <p>{post}</p>
-          </div>
-          {image && <img style={{ position: 'relative', maxWidth: '100%', width: "100%" }} src={image} alt="" />}
         </div>
+        <div className="post_upvotes">
+          Upvotes: {video ? upvotes + 1 : upvotes}
+        </div>
+        <div className="post_headerDescription">
+          <p>{post}</p>
+        </div>
+        {image && <img style={{ position: 'relative', maxWidth: '100%', width: "100%" }} src={image} alt="" />}
+
         {video && <video style={{ position: 'relative', maxWidth: '100%', justifyContent: 'center' }} src={video} controls ></video>}
 
         <div className="post_footer">
