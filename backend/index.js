@@ -54,7 +54,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
       pLink = session.payment_link;
       subscriptionNumber = 0;
       // Update user's subscription status
-      if(pLink == "plink_1PN6ueP89gSk3mLCiRTaXQTd"){
+      if(pLink == process.env.YEARLY_SUBSCRIPTION_LINK){
         // yearly subscription
         subscriptionNumber = 2;
         await userCollection.updateOne(
@@ -67,7 +67,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
           { $set: { subscriptionExpiry: Date.now() + 31536000000 } }
         );
       }
-      else if(pLink == "plink_1PO44OP89gSk3mLCeW4ltRq3"){
+      else if(pLink == process.env.MONTHLY_SUBSCRIPTION_LINK){
         // monthly subsscription
         subscriptionNumber = 1
         await userCollection.updateOne(
