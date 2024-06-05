@@ -14,6 +14,7 @@ import Lists from "./pages/Lists/Lists";
 import Profile from "./pages/Profile/Profile";
 import More from "./pages/More/More";
 import Notifications from "./pages/Notifications/Notifications";
+import Success from "./pages/Success/Success"
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
             <Route path="profile" element={<Profile />} />
             <Route path="more" element={<More />} />
           </Route>
+          <Route path="success" element={<Success />} />
           <Route path="/loading" element={<PageLoading />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

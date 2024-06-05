@@ -13,6 +13,8 @@
   padding: 20px;
   display: flex;
   align-items: center;
+  width: 100%;
+  justify-content: center;
 }
 
 .tweetBox__input > input {
@@ -68,4 +70,94 @@
 #parent-modal-description{
   display: flex;
   width: max-content;
+}
+
+/* payment modal styles */
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap");
+
+
+
+h1 {
+  text-align: center;
+  margin-top: 2rem;
+}
+p {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+.pricing {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .plan {
+    background-color: #fff;
+    padding: 2.5rem;
+    margin: 12px;
+    border-radius: 5px;
+    text-align: center;
+    transition: 0.3s;
+    cursor: pointer;
+
+    h2 {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .price {
+      margin-bottom: 1rem;
+      font-size: 30px;
+    }
+
+    ul.features {
+      list-style-type: none;
+      text-align: left;
+      li {
+        margin: 8px;
+        .fas {
+          margin-right: 4px;
+        }
+        .fa-check-circle {
+          color: var(--twitter-color) !important;
+        }
+        .fa-times-circle {
+          color: var(--twitter-color) !important;
+        }
+      }
+    }
+
+    button {
+      border: none;
+      width: 100%;
+      padding: 12px 35px;
+      margin-top: 1rem;
+      background-color: var(--twitter-color) !important;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    &.popular {
+      border: 2px solid var(--twitter-color) !important;
+      position: relative;
+      transform: scale(1.08);
+
+      span {
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--twitter-color) !important;
+        color: #fff;
+        padding: 4px 20px;
+        font-size: 18px;
+        border-radius: 5px;
+      }
+    }
+
+    &:hover {
+      box-shadow: 5px 7px 67px -28px rgba(0, 0, 0, 0.37);
+    }
+  }
 }

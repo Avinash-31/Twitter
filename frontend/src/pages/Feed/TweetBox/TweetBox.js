@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Avatar, Box, Button, Modal, TextField } from "@mui/material";
+import { Avatar, Box, Button, Modal, TextField, Tooltip } from "@mui/material";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import AddVideo from '@mui/icons-material/VideoCall';
+import InfoIcon from '@mui/icons-material/Info';
 import "./TweetBox.css";
 import axios from "axios";
 import UseLoggedInUser from "../../../hooks/UseLoggedInUser";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
 import { ThreeDots } from "react-loader-spinner";
+import VerifiedIcon from '@mui/icons-material/Verified';
+
 
 const TweetBox = () => {
   // console.log(process.env.REACT_APP_IMBB);
@@ -26,7 +29,9 @@ const TweetBox = () => {
   const email = user?.email;
 
   const [postCount, setPostCount] = useState(0);
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(0);
+  const [subscriptionType, setSubscrtiptonType] = useState(" ");
+  const [subscriptionExpiry, setSubscrtiptonExpiry] = useState(Date.now());
 
   // for otp
   const [otp1, setOtp1] = useState('');
@@ -50,6 +55,14 @@ const TweetBox = () => {
       .then((data) => {
         setPostCount(data.postCount);
         setIsSubscribed(data.isSubscribed);
+        const date = new Date(data.subscriptionExpiry);
+        const formattedDate = date.toLocaleDateString();
+        setSubscrtiptonExpiry(formattedDate);
+        if (data.isSubscribed == 2) {
+          setSubscrtiptonType("Yearly")
+        } else if (data.isSubscribed == 1) {
+          setSubscrtiptonType("Monthly")
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -193,20 +206,44 @@ const TweetBox = () => {
       aria-labelledby="parent-modal-title"
       aria-describedby="parent-modal-description"
     >
-      <Box sx={{ ...style, width: 400 }}>
-        <h2 id="parent-modal-title">Choose a plus membership plan</h2>
-        <p id="parent-modal-description" style={{ flexDirection: 'column', justifyContent: 'center' }}>
-          <h3>Monthly Plan</h3>
-          <p>Get access to premium features for a month</p>
-          <p>Unlimited posts for a month</p>
-          <p>₹ 99</p>
-          <button>Monthly</button>
-          <h3>Yearly Plan</h3>
-          <p>Get access to premium features for a year</p>
-          <p>Unlimited posts for a year</p>
-          <p>₹ 499</p>
-          <button>Yearly</button>
+      <Box sx={{ ...style, width: '75%' }}>
+        <h1>Choose the plan that fits for your team</h1>
+        <p>
+          No credit card required
         </p>
+
+        <div class="pricing">
+          <div class="plan">
+            <h2>Basic(Current)</h2>
+            <div class="price">FREE</div>
+            <ul class="features">
+              <li><i class="fas fa-check-circle"></i> 10 posts</li>
+              <li><i class="fas fa-check-circle"></i> 10MB Space for image <br></br> or video uploads</li>
+              <li><i class="fas fa-times-circle"></i> No priority support</li>
+            </ul>
+          </div>
+          <div class="plan popular">
+            <span>Most Popular</span>
+            <h2>Yearly</h2>
+            <div class="price">Rs 499/year</div>
+            <ul class="features">
+              <li><i class="fas fa-check-circle"></i> Unlimited Posts</li>
+              <li><i class="fas fa-check-circle"></i> Unlimited space</li>
+              <li><i class="fas fa-check-circle"></i> Priority Support</li>
+            </ul>
+            <a href="https://buy.stripe.com/test_5kA017gBEdZq1bO288"><button>Buy Now</button></a>
+          </div>
+          <div class="plan">
+            <h2>Monthly</h2>
+            <div class="price">Rs 199/month</div>
+            <ul class="features">
+              <li><i class="fas fa-check-circle"></i> Unlimited posts</li>
+              <li><i class="fas fa-check-circle"></i> Unlimited Space</li>
+              <li><i class="fas fa-check-circle"></i> Priority Support</li>
+            </ul>
+            <a href="https://buy.stripe.com/test_6oEcNT714aNedYAcMN"><button>Buy Now</button></a>
+          </div>
+        </div>
       </Box>
     </Modal>
   );
@@ -218,20 +255,44 @@ const TweetBox = () => {
       aria-labelledby="parent-modal-title"
       aria-describedby="parent-modal-description"
     >
-      <Box sx={{ ...style, width: 'auto', display : 'flex', flexDirection : 'column', justifyContent : 'center', alignItems : 'center' }}>
-        <h2 id="parent-modal-title">You have exceeded your Post limit!</h2>
-        <p id="parent-modal-description" style={{ flexDirection: 'column', justifyContent: 'center' }}>
-          <h3>Monthly Plan</h3>
-          <p>Get access to premium features for a month</p>
-          <p>Unlimited posts for a month</p>
-          <p>₹ 99</p>
-          <button>Monthly</button>
-          <h3>Yearly Plan</h3>
-          <p>Get access to premium features for a year</p>
-          <p>Unlimited posts for a year</p>
-          <p>₹ 499</p>
-          <button>Yearly</button>
+      <Box sx={{ ...style, width: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+        <h1>You have exceeded your Post limit!,<br /> Choose the plan that fits for your team</h1>
+        <p>
+          No credit card required
         </p>
+
+        <div class="pricing">
+          <div class="plan">
+            <h2>Basic(Current)</h2>
+            <div class="price">FREE</div>
+            <ul class="features">
+              <li><i class="fas fa-check-circle"></i> 10 posts</li>
+              <li><i class="fas fa-check-circle"></i> 10MB Space for image <br></br> or video uploads</li>
+              <li><i class="fas fa-times-circle"></i> No priority support</li>
+            </ul>
+          </div>
+          <div class="plan popular">
+            <span>Most Popular</span>
+            <h2>Yearly</h2>
+            <div class="price">Rs 499/year</div>
+            <ul class="features">
+              <li><i class="fas fa-check-circle"></i> Unlimited Posts</li>
+              <li><i class="fas fa-check-circle"></i> Unlimited space</li>
+              <li><i class="fas fa-check-circle"></i> Priority Support</li>
+            </ul>
+            <a href="https://buy.stripe.com/test_5kA017gBEdZq1bO288"><button>Buy Now</button></a>
+          </div>
+          <div class="plan">
+            <h2>Monthly</h2>
+            <div class="price">Rs 199/month</div>
+            <ul class="features">
+              <li><i class="fas fa-check-circle"></i> Unlimited posts</li>
+              <li><i class="fas fa-check-circle"></i> Unlimited Space</li>
+              <li><i class="fas fa-check-circle"></i> Priority Support</li>
+            </ul>
+            <a href="https://buy.stripe.com/test_6oEcNT714aNedYAcMN"><button>Buy Now</button></a>
+          </div>
+        </div>
       </Box>
     </Modal>
   );
@@ -254,7 +315,7 @@ const TweetBox = () => {
       setName(user.displayName);
     }
     if (name) {
-      if (postCount > 9) {
+      if (postCount > 5 && !isSubscribed) {
         // alert("You have reached your post limit. Please subscribe to post more");
         setOpenPostLimitModal(true);
         return;
@@ -283,6 +344,8 @@ const TweetBox = () => {
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
+          // to reload the page
+          window.location.reload();
         })
         .catch((error) => {
           console.log(error);
@@ -313,8 +376,6 @@ const TweetBox = () => {
         setIsLoading(false);
       });
   };
-
-
 
   const handleUploadVideo = (e) => {
     const videoFile = document.getElementById("video").files;
@@ -355,7 +416,13 @@ const TweetBox = () => {
 
   return (
     <div className="tweetBox">
-      <button onClick={handlePayment} style={{ position: 'relative', right: '-80%' }}>Plus membership</button>
+      {/* is subscribed subscribe butto is hidden is hidden */}
+      {!isSubscribed ? (
+        <div className="tweetBox__input" style = {{width : '100%'}}>
+          <h4>Subscribe to post more</h4>
+          <Button onClick={handlePayment}>Subscribe</Button>
+        </div>
+      ) : null}
       <form onSubmit={handleTweet}>
         <div className="tweetBox__input">
           <Avatar src={userProfilePic} />
@@ -366,10 +433,21 @@ const TweetBox = () => {
             value={post}
             required
           />
-        </div>
-        <div>
-          <p>Post Count: {postCount}</p>
-          <p>Subscription Status: {isSubscribed ? 'Subscribed' : 'Not Subscribed'}</p>
+          {/* is user is subscribed show verified icon else InfoIcon */}
+          {isSubscribed ? 
+          <Tooltip title={`Subscription Status: ${isSubscribed ? `${subscriptionType} Subscription expires on ${subscriptionExpiry}` : `Not subscribed ;  Posts left : ${10 - postCount}`}`}>
+          <VerifiedIcon style={{color : '#1DA1F2'}} />
+        </Tooltip>
+         : 
+          <Tooltip title={`Subscription Status: ${isSubscribed ? `${subscriptionType} Subscription expires on ${subscriptionExpiry}` : `Not subscribed ; Posts left : ${10 - postCount}`}`}>
+          <InfoIcon />
+        </Tooltip>
+        }
+          
+          {postCount > 4 && !isSubscribed ? (
+            <p style={{ color: 'red' }}>You have reached your post limit. Please subscribe to post more</p>
+          ) : null}
+          {/* <p>Subscription Status: {isSubscribed ? 'Subscribed' : 'Not Subscribed'}</p> */}
         </div>
         <div className="imageIcon_tweetButton">
           <label htmlFor="image" className="imageIcon">

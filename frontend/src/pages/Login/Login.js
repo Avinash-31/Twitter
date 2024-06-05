@@ -22,11 +22,12 @@ const Login = () => {
     useSignInWithGoogle(auth);
 
   if (user || googleUser) {
-    navigate("/");
+    navigate("/home/profile");
     console.log(user);
     console.log(googleUser);
   }
   if (error) {
+    alert(error.message);
     console.log(error.message);
     console.log(errorMessage);
   }

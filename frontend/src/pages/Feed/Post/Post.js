@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -13,7 +13,8 @@ const Post = ({ p }) => {
   const { name, username, image, video, post, profilePhoto } = p;
   const [upvotes, setUpvotes] = useState(p.upvotes); // maintain a state for upvotes
   const [hasUpvoted, setHasUpvoted] = useState(false); // maintain a state for whether the user has upvoted
-  
+  const [isSubscribed, setIsSubscribed] = useState(0);
+
   // function to handle upvote click
   const handleUpvote = async () => {
     if (!hasUpvoted) {
@@ -25,16 +26,28 @@ const Post = ({ p }) => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setUpvotes(upvotes+1);
+        setUpvotes(upvotes + 1);
         setHasUpvoted(true);
       } catch (error) {
         console.error('Error:', error);
       }
     } else {
-      setUpvotes(upvotes-1);
+      setUpvotes(upvotes - 1);
       setHasUpvoted(false);
     }
   };
+  useEffect(() => {
+    fetch(`http://localhost:5000/userStat?postid=${p._id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setIsSubscribed(data.isSubscribed);
+        console.log(isSubscribed);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [p._id]);
+
 
   return (
     <div className="post">
@@ -50,7 +63,8 @@ const Post = ({ p }) => {
             <h3>
               {name}{" "}
               <span className="post_headerSpecial">
-                <VerifiedIcon className="post_badge" /> @{username}
+                {isSubscribed?<VerifiedIcon className="post_badge" />:null}
+                @{username}
               </span>
             </h3>
           </div>

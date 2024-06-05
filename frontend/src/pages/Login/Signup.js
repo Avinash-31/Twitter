@@ -49,6 +49,7 @@ const Signup = () => {
     };
     const { data } = axios.post("http://localhost:5000/register", user);
     console.log(data);
+    navigate("/login");
   };
 
   const handleGoogleSignIn = () => {

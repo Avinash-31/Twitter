@@ -21,7 +21,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
   const sig = request.headers['stripe-signature'];
   let event;
   try {
-    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(request.body, sig, process.env.STRIPE_SIGNING_ACC);
   } catch (err) {
     response.status(400).send(`Webhook Error: ${err.message}`);
     return;
@@ -37,25 +37,49 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
       break;
     case 'checkout.session.completed':
       session = event.data.object;
-      const user = await userCollection.findOne({email : session.customer_details.email});
-      if(user){
+      const userCollection = client.db("database").collection("users");
+      const user = await userCollection.findOne({ email: session.customer_details.email });
+      if (user) {
         await userCollection.updateOne(
           {
-            email : session.customer_details.email
+            email: session.customer_details.email
           },
           {
-            $set : {isSubscribed: true}
+            $set: { isSubscribed: true }
           }
         );
       }
       console.log(session);
       let emailto = session.customer_details.email
-
+      pLink = session.payment_link;
+      subscriptionNumber = 0;
       // Update user's subscription status
-      await userCollection.updateOne(
-        { email: emailto },
-        { $set: { isSubscribed: true } }
-      );
+      if(pLink == "plink_1PN6ueP89gSk3mLCiRTaXQTd"){
+        // yearly subscription
+        subscriptionNumber = 2;
+        await userCollection.updateOne(
+          { email: emailto },
+          { $set: { isSubscribed: 2 } }
+        );
+        // set subscription expiry to 1 year from present date
+        await userCollection.updateOne(
+          { email: emailto },
+          { $set: { subscriptionExpiry: Date.now() + 31536000000 } }
+        );
+      }
+      else if(pLink == "plink_1PO44OP89gSk3mLCeW4ltRq3"){
+        // monthly subsscription
+        subscriptionNumber = 1
+        await userCollection.updateOne(
+          { email: emailto },
+          { $set: { isSubscribed: 2 } }
+        );
+        // set subscription expiry to 1 month from present date
+        await userCollection.updateOne(
+          { email: emailto },
+          { $set: { subscriptionExpiry: Date.now() + 2592000000 } }
+        );
+      }
 
       // Then define and call a function to handle the event checkout.session.async_payment_succeeded
       let transporter = nm.createTransport(
@@ -70,6 +94,8 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
         }
       );
 
+      subscriptionType = subscriptionNumber == 2? "Yearly" : "Monthly";
+      amountPaid = subscriptionNumber == 2? "Rs 499" : "Rs 199"; 
       // send mail with defined transporter object
       let info = await transporter.sendMail({
         from: process.env.EMAIL, // sender address
@@ -77,19 +103,102 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
         subject: "Payment Successful", // Subject line
         text: "Payment Successful", // plain text body
         html: `
-        
-        <h1>Payment Successful</h1>
-        <p>Thank you ${session.customer_details.name} for your payment</p>
-        <p>Amount: Rs 500</p>
-        <p>Payment Status: ${session.payment_status}</p>
-        <p>Payment Date: ${Date.now}</p>
-        <p>Payment Method: ${session.payment_method_types}</p>
+        <div class="container mt-6 mb-7">
+          <div class="row justify-content-center">
+            <div class="col-lg-12 col-xl-7">
+              <div class="card">
+                <div class="card-body p-5">
+                  <h2>
+                    Hey ${session.customer_details.name},
+                  </h2>
+                  <p class="fs-sm">
+                    This is the receipt for a payment of <strong>${amountPaid}</strong> (Rupee) you made to Twitter Subscription.
+                  </p>
 
+                  <div class="border-top border-gray-200 pt-4 mt-4">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="text-muted mb-2">Payment No.</div>
+                        <strong>#${session.subscription}</strong>
+                      </div>
+                      <div class="col-md-6 text-md-end">
+                        <div class="text-muted mb-2">Payment Date</div>
+                        <strong>${Date.now}</strong>
+                      </div>
+                    </div>
+                  </div>
 
+                  <div class="border-top border-gray-200 mt-4 py-4">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="text-muted mb-2">Client</div>
+                        <strong>
+                          ${session.customer_details.name}
+                        </strong>
+                        <p class="fs-sm">
+                          
+                          <br>
+                          <a href="#!" class="text-purple">${session.customer_details.email}
+                          </a>
+                        </p>
+                      </div>
+                      <div class="col-md-6 text-md-end">
+                        <div class="text-muted mb-2">Payment To</div>
+                        <strong>
+                          Twitter ${subscriptionType} Subscription
+                        </strong>
+                        <p class="fs-sm">
+                          NIT Durgapur
+                          <br>
+                          <a href="#!" class="text-purple">avinash.80031@gmail.com
+                          </a>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
+                  <table class="table border-bottom border-gray-200 mt-3">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="fs-sm text-dark text-uppercase-bold-sm px-0">Description</th>
+                        <th scope="col" class="fs-sm text-dark text-uppercase-bold-sm text-end px-0">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="px-0">${subscriptionType} Subscription</td>
+                        <td class="text-end px-0">${amountPaid}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <div class="mt-5">
+                    <div class="d-flex justify-content-end">
+                      <p class="text-muted me-3">Subtotal:</p>
+                      <span>${amountPaid}</span>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                      
+                    </div>
+                    <div class="d-flex justify-content-end mt-3">
+                      <h5 class="me-3">Total:</h5>
+                      <h5 class="text-success">${amountPaid}</h5>
+                    </div>
+                  </div>
+                </div>
+                <a href="#!" class="btn btn-dark btn-lg card-footer-btn justify-content-center text-uppercase-bold-sm hover-lift-light">
+                  <span class="svg-icon text-white me-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><title>ionicons-v5-g</title><path d="M336,208V113a80,80,0,0,0-160,0v95" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></path><rect x="96" y="208" width="320" height="272" rx="48" ry="48" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></rect></svg>
+                  </span>
+                  Payment Status : ${session.payment_status}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
         `, // html body
       });
-      console.log("Message sent : %s", info.message);
+      console.log("Message sent ");
 
       break;
     // ... handle other event types
@@ -144,33 +253,50 @@ async function run() {
       res.send(posts);
     });
 
-    app.get("/userStatus",async(req,res)=>{
+    app.get("/userStatus", async (req, res) => {
       const email = req.query.email;
-      const user = await userCollection.findOne({email : email});
-      if(!user){
+      const user = await userCollection.findOne({ email: email });
+      // const posts = await postCollection.find({ email: email }).toArray();
+      if (!user) {
         return res.status(404).send("User not found")
       }
-      const {postCount,isSubscribed}=user;
+      const { postCount, isSubscribed,subscriptionExpiry } = user;
       res.json({
         postCount,
+        isSubscribed,
+        subscriptionExpiry,
+      })
+    })
+
+    const {ObjectId} = require('mongodb');
+
+    app.get("/userStat",async(req,res)=>{
+      const postId = req.query.postid;
+      const post = await postCollection.findOne({_id : new ObjectId(postId)});
+      if(!post){
+        return res.status(404).send("Post not found");
+      }
+      const {email} = post;
+      const user = await userCollection.findOne({email : email});
+      if(!user){
+        return res.status(404).send("User not found");
+      }
+      const {isSubscribed} = user;
+      res.json({
         isSubscribed
       })
     })
+
     app.post("/posts", async (req, res) => {
       const post = req.body;
       const user = await userCollection.findOne({ email: post.email });
-
-      // If the user is not subscribed and has reached the post limit, return an error
-      const postLimit = 10; // Set your post limit here
-      // if (!user.isSubscribed && user.postCount >= postLimit) {
-      //   return res.status(403).send('You have reached your post limit. Subscribe to create unlimited posts');
-      // }
-
+      // to get the number of posts of the user form postCollection
+      const posts = await postCollection.find({ email: post.email }).toArray();
+      // console.log(posts.length)
       // Increment the user's post count
       await userCollection.updateOne(
         { email: post.email },
-        { $inc: { postCount: 1 } }
-        
+        { $set: { postCount: posts.length + 1 } }
       );
       const result = await postCollection.insertOne(post);
       res.send(result);
@@ -191,8 +317,9 @@ async function run() {
 
     app.post("/register", async (req, res) => {
       const user = req.body;
-      user.isSubscribed = false;
+      user.isSubscribed = 0;
       user.postCount = 0;
+      user.subscriptionExpiry = Date.now();
       const result = await userCollection.insertOne(user);
       res.send(result);
     });
