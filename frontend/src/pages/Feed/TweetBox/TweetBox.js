@@ -10,6 +10,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
 import { ThreeDots } from "react-loader-spinner";
 import VerifiedIcon from '@mui/icons-material/Verified';
+import { useTranslation } from "react-i18next";
 
 
 const TweetBox = () => {
@@ -48,7 +49,12 @@ const TweetBox = () => {
   const [payOpenModal, setPayOpenModal] = useState(false);
   const [openPostLimitModal, setOpenPostLimitModal] = useState(false);
 
-
+  // for language
+  const { t } = useTranslation();
+  const { subsToPost, subscribe, whatsHappening, subsStatus, subsExpire, subsNot, limitReached, tweet } = t("tweetBox");
+  const { chooseText,noCredit,basic,free,free1,free2,free3,free4,pop,yearly,rsy,y1,y2,y3,buy,monthly,mp,limitExceed} = t("paymentModal")
+  const {enterotp,l1,verify} = t("otpModal");
+  
   useEffect(() => {
     fetch(`http://localhost:5000/userStatus?email=${email}`)
       .then((res) => res.json())
@@ -154,9 +160,9 @@ const TweetBox = () => {
       aria-describedby="parent-modal-description"
     >
       <Box sx={{ ...style, width: 400 }}>
-        <h2 id="parent-modal-title">Enter OTP to proceed</h2>
+        <h2 id="parent-modal-title">{enterotp}</h2>
         <p id="parent-modal-description">
-          We have sent otp to your mail {user.email}
+          {l1}{user.email}
         </p>
         <div className="otpField">
           <TextField
@@ -193,7 +199,7 @@ const TweetBox = () => {
             value={otp4}
             onChange={(e) => setOtp4(e.target.value.slice(0, 1))}
           />
-          <Button onClick={verifyOtp}>Verify OTP</Button>
+          <Button onClick={verifyOtp}>{verify}</Button>
         </div>
       </Box>
     </Modal>
@@ -207,41 +213,41 @@ const TweetBox = () => {
       aria-describedby="parent-modal-description"
     >
       <Box sx={{ ...style, width: '75%' }}>
-        <h1>Choose the plan that fits for your team</h1>
+        <h1>{chooseText}</h1>
         <p>
-          No credit card required
+          {noCredit}
         </p>
 
         <div class="pricing">
           <div class="plan">
-            <h2>Basic(Current)</h2>
-            <div class="price">FREE</div>
+            <h2>{basic}</h2>
+            <div class="price">{free}</div>
             <ul class="features">
-              <li><i class="fas fa-check-circle"></i> 10 posts</li>
-              <li><i class="fas fa-check-circle"></i> 10MB Space for image <br></br> or video uploads</li>
-              <li><i class="fas fa-times-circle"></i> No priority support</li>
+              <li><i class="fas fa-check-circle"></i> {free1}</li>
+              <li><i class="fas fa-check-circle"></i> {free2}<br></br>{free3}</li>
+              <li><i class="fas fa-times-circle"></i> {free4}</li>
             </ul>
           </div>
           <div class="plan popular">
-            <span>Most Popular</span>
-            <h2>Yearly</h2>
-            <div class="price">Rs 499/year</div>
+            <span>{pop}</span>
+            <h2>{yearly}</h2>
+            <div class="price">{rsy}</div>
             <ul class="features">
-              <li><i class="fas fa-check-circle"></i> Unlimited Posts</li>
-              <li><i class="fas fa-check-circle"></i> Unlimited space</li>
-              <li><i class="fas fa-check-circle"></i> Priority Support</li>
+              <li><i class="fas fa-check-circle"></i> {y1}</li>
+              <li><i class="fas fa-check-circle"></i> {y2}</li>
+              <li><i class="fas fa-check-circle"></i> {y3}</li>
             </ul>
-            <a href="https://buy.stripe.com/test_5kA017gBEdZq1bO288"><button>Buy Now</button></a>
+            <a href="https://buy.stripe.com/test_5kA017gBEdZq1bO288"><button>{buy}</button></a>
           </div>
           <div class="plan">
-            <h2>Monthly</h2>
-            <div class="price">Rs 199/month</div>
+            <h2>{monthly}</h2>
+            <div class="price">{mp}</div>
             <ul class="features">
-              <li><i class="fas fa-check-circle"></i> Unlimited posts</li>
-              <li><i class="fas fa-check-circle"></i> Unlimited Space</li>
-              <li><i class="fas fa-check-circle"></i> Priority Support</li>
+              <li><i class="fas fa-check-circle"></i> {y1}</li>
+              <li><i class="fas fa-check-circle"></i> {y2}</li>
+              <li><i class="fas fa-check-circle"></i> {y3}</li>
             </ul>
-            <a href="https://buy.stripe.com/test_6oEcNT714aNedYAcMN"><button>Buy Now</button></a>
+            <a href="https://buy.stripe.com/test_6oEcNT714aNedYAcMN"><button>{buy}</button></a>
           </div>
         </div>
       </Box>
@@ -256,41 +262,41 @@ const TweetBox = () => {
       aria-describedby="parent-modal-description"
     >
       <Box sx={{ ...style, width: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        <h1>You have exceeded your Post limit!,<br /> Choose the plan that fits for your team</h1>
+        <h1>{limitExceed}<br /> {chooseText}</h1>
         <p>
-          No credit card required
+          {noCredit}
         </p>
 
         <div class="pricing">
           <div class="plan">
-            <h2>Basic(Current)</h2>
-            <div class="price">FREE</div>
+            <h2>{basic}</h2>
+            <div class="price">{free}</div>
             <ul class="features">
-              <li><i class="fas fa-check-circle"></i> 10 posts</li>
-              <li><i class="fas fa-check-circle"></i> 10MB Space for image <br></br> or video uploads</li>
-              <li><i class="fas fa-times-circle"></i> No priority support</li>
+              <li><i class="fas fa-check-circle"></i> {free1}</li>
+              <li><i class="fas fa-check-circle"></i> {free2}<br></br>{free3}</li>
+              <li><i class="fas fa-times-circle"></i> {free4}</li>
             </ul>
           </div>
           <div class="plan popular">
-            <span>Most Popular</span>
-            <h2>Yearly</h2>
-            <div class="price">Rs 499/year</div>
+            <span>{pop}</span>
+            <h2>{yearly}</h2>
+            <div class="price">{rsy}</div>
             <ul class="features">
-              <li><i class="fas fa-check-circle"></i> Unlimited Posts</li>
-              <li><i class="fas fa-check-circle"></i> Unlimited space</li>
-              <li><i class="fas fa-check-circle"></i> Priority Support</li>
+              <li><i class="fas fa-check-circle"></i> {y1}</li>
+              <li><i class="fas fa-check-circle"></i> {y2}</li>
+              <li><i class="fas fa-check-circle"></i> {y3}</li>
             </ul>
-            <a href="https://buy.stripe.com/test_5kA017gBEdZq1bO288"><button>Buy Now</button></a>
+            <a href="https://buy.stripe.com/test_5kA017gBEdZq1bO288"><button>{buy}</button></a>
           </div>
           <div class="plan">
-            <h2>Monthly</h2>
-            <div class="price">Rs 199/month</div>
+            <h2>{monthly}</h2>
+            <div class="price">{mp}</div>
             <ul class="features">
-              <li><i class="fas fa-check-circle"></i> Unlimited posts</li>
-              <li><i class="fas fa-check-circle"></i> Unlimited Space</li>
-              <li><i class="fas fa-check-circle"></i> Priority Support</li>
+              <li><i class="fas fa-check-circle"></i> {y1}</li>
+              <li><i class="fas fa-check-circle"></i> {y2}</li>
+              <li><i class="fas fa-check-circle"></i> {y3}</li>
             </ul>
-            <a href="https://buy.stripe.com/test_6oEcNT714aNedYAcMN"><button>Buy Now</button></a>
+            <a href="https://buy.stripe.com/test_6oEcNT714aNedYAcMN"><button>{buy}</button></a>
           </div>
         </div>
       </Box>
@@ -315,7 +321,7 @@ const TweetBox = () => {
       setName(user.displayName);
     }
     if (name) {
-      if (postCount > 5 && !isSubscribed) {
+      if (postCount > 10 && !isSubscribed) {
         // alert("You have reached your post limit. Please subscribe to post more");
         setOpenPostLimitModal(true);
         return;
@@ -410,7 +416,7 @@ const TweetBox = () => {
 
   const handlePayment = (e) => {
     e.preventDefault();
-    console.log("clicked");
+    // console.log("clicked");
     setPayOpenModal(true);
   }
 
@@ -418,9 +424,9 @@ const TweetBox = () => {
     <div className="tweetBox">
       {/* is subscribed subscribe butto is hidden is hidden */}
       {!isSubscribed ? (
-        <div className="tweetBox__input" style = {{width : '100%'}}>
-          <h4>Subscribe to post more</h4>
-          <Button onClick={handlePayment}>Subscribe</Button>
+        <div className="tweetBox__input" style={{ width: '100%' }}>
+          <h4>{subsToPost}</h4>
+          <Button onClick={handlePayment}>{subscribe}</Button>
         </div>
       ) : null}
       <form onSubmit={handleTweet}>
@@ -428,24 +434,24 @@ const TweetBox = () => {
           <Avatar src={userProfilePic} />
           <input
             type="text"
-            placeholder="What's happening?"
+            placeholder={whatsHappening}
             onChange={(e) => setPost(e.target.value)}
             value={post}
             required
           />
           {/* is user is subscribed show verified icon else InfoIcon */}
-          {isSubscribed ? 
-          <Tooltip title={`Subscription Status: ${isSubscribed ? `${subscriptionType} Subscription expires on ${subscriptionExpiry}` : `Not subscribed ;  Posts left : ${10 - postCount}`}`}>
-          <VerifiedIcon style={{color : '#1DA1F2'}} />
-        </Tooltip>
-         : 
-          <Tooltip title={`Subscription Status: ${isSubscribed ? `${subscriptionType} Subscription expires on ${subscriptionExpiry}` : `Not subscribed ; Posts left : ${10 - postCount}`}`}>
-          <InfoIcon />
-        </Tooltip>
-        }
-          
-          {postCount > 4 && !isSubscribed ? (
-            <p style={{ color: 'red' }}>You have reached your post limit. Please subscribe to post more</p>
+          {isSubscribed ?
+            <Tooltip title={`${subsStatus}${isSubscribed ? `${subscriptionType}${subsExpire}${subscriptionExpiry}` : `${subsNot} ${10 - postCount}`}`}>
+              <VerifiedIcon style={{ color: '#1DA1F2' }} />
+            </Tooltip>
+            :
+            <Tooltip title={`${subsStatus}${isSubscribed ? `${subscriptionType}${subsExpire}${subscriptionExpiry}` : `${subsNot} ${10 - postCount}`}`}>
+              <InfoIcon />
+            </Tooltip>
+          }
+
+          {postCount > 9 && !isSubscribed ? (
+            <p style={{ color: 'red' }}>{limitReached}</p>
           ) : null}
           {/* <p>Subscription Status: {isSubscribed ? 'Subscribed' : 'Not Subscribed'}</p> */}
         </div>
@@ -505,7 +511,7 @@ const TweetBox = () => {
           />
         </div>
         <Button className="tweetBox__tweetButton" type="submit">
-          Tweet
+          {tweet}
         </Button>
       </form>
       {paymentModal}

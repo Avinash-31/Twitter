@@ -1,5 +1,6 @@
 import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
+import { useTranslation } from "react-i18next";
 import {
   TwitterTimelineEmbed,
   TwitterShareButton,
@@ -8,15 +9,16 @@ import {
 import "./Widgets.css";
 
 const Widgets = () => {
+  const { t } = useTranslation();
   return (
     <div className="widgets">
       <div className="widgets__input">
         <SearchIcon className="widgets__searchIcon" />
-        <input placeholder="Search Twitter" type="text" />
+        <input placeholder={t("searchTwitter")} type="text" />
       </div>
 
       <div className="widgets__widgetContainer">
-        <h2>What's happening</h2>
+        <h2>{t("whatsHappening")}</h2>
 
         <TwitterTweetEmbed tweetId={"1557187138352861186"} />
 

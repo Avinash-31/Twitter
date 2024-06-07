@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import TwitterIcon from "@mui/icons-material/X";
 import "./Sidebar.css";
 import SidebarOptions from "./SidebarOptions";
@@ -24,6 +25,7 @@ import More from "@mui/icons-material/More";
 import UseLoggedInUser from "../../hooks/UseLoggedInUser";
 
 const Sidebar = ({ handleLogout, user }) => {
+  const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
   const [loggedInUser] = UseLoggedInUser();
@@ -44,31 +46,31 @@ const Sidebar = ({ handleLogout, user }) => {
     <div className="sidebar">
       <TwitterIcon className="sidebar_twitterIcon" />
       <CustomeLink to="/home/feed">
-        <SidebarOptions active Icon={HomeIcon} text="Home" />
+        <SidebarOptions active Icon={HomeIcon} text={t("sidebarHome")} />
       </CustomeLink>
       <CustomeLink to="/home/explore">
-        <SidebarOptions Icon={SearchIcon} text="Explore" />
+        <SidebarOptions Icon={SearchIcon} text={t("sidebarExplore")} />
       </CustomeLink>
       <CustomeLink to="/home/notifications">
-        <SidebarOptions Icon={NotificationsNoneIcon} text="Notifications" />
+        <SidebarOptions Icon={NotificationsNoneIcon} text={t("sidebarNotifications")} />
       </CustomeLink>
       <CustomeLink to="/home/messages">
-        <SidebarOptions Icon={MailOutlineIcon} text="Messages" />
+        <SidebarOptions Icon={MailOutlineIcon} text={t("sidebarMessages")} />
       </CustomeLink>
       <CustomeLink to="/home/bookmarks">
-        <SidebarOptions Icon={BookmarkBorderIcon} text="Bookmarks" />
+        <SidebarOptions Icon={BookmarkBorderIcon} text={t("sidebarBookmarks")} />
       </CustomeLink>
       <CustomeLink to="/home/lists">
-        <SidebarOptions Icon={ListAltIcon} text="Lists" />
+        <SidebarOptions Icon={ListAltIcon} text={t("sidebarLists")} />
       </CustomeLink>
       <CustomeLink to="/home/profile">
-        <SidebarOptions Icon={PermIdentityIcon} text="Profile" />
+        <SidebarOptions Icon={PermIdentityIcon} text={t("sidebarProfile")} />
       </CustomeLink>
       <CustomeLink to="/home/more">
-        <SidebarOptions Icon={MoreIcon} text="More" />
+        <SidebarOptions Icon={MoreIcon} text={t("sidebarMore")} />
       </CustomeLink>
       <Button variant="outlined" className="sidebar_tweet" fullWidth>
-        Tweet
+        {t("sidebarTweet")}
       </Button>
       <div className="Profile_info">
         <Avatar src={userProfilePic} />

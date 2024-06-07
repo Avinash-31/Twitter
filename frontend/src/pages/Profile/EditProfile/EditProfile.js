@@ -6,6 +6,7 @@ import { IconButton, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const style = {
   position: "absolute",
@@ -19,6 +20,7 @@ const style = {
   borderRadius: 8,
 };
 
+
 function EditChild({ dob, setDob }) {
   const [open, setOpen] = useState(false);
 
@@ -28,11 +30,13 @@ function EditChild({ dob, setDob }) {
   const handleClose = () => {
     setOpen(false);
   };
+  const { t } = useTranslation();
+  const { edit, editDOB, line1, line2, line3, cancel} = t("editProfile");
 
   return (
     <>
       <div className="birthdate-section" onClick={handleOpen}>
-        <text>Edit</text>
+        <text>{edit}</text>
       </div>
       <Modal
         hideBackdrop
@@ -43,12 +47,12 @@ function EditChild({ dob, setDob }) {
       >
         <Box sx={{ ...style, width: 300, height: 400 }}>
           <div className="text">
-            <h2>Edit date of birth?</h2>
+            <h2>{editDOB}</h2>
             <p>
-              This can only be changed a few times.
+              {line1}
               <br />
-              make sure you enter the age of the <br />
-              person using account
+              {line2}<br />
+              {line3}
             </p>
             <input type="date" onChange={(e) => setDob(e.target.value)} />
             <button
@@ -57,7 +61,7 @@ function EditChild({ dob, setDob }) {
                 setOpen(false);
               }}
             >
-              Cancel
+              {cancel}
             </button>
           </div>
         </Box>
@@ -74,6 +78,9 @@ export default function EditProfile({ user, loggedInUser }) {
   const [website, setWebsite] = useState("");
   const [dob, setDob] = useState("");
 
+  const { t } = useTranslation();
+  const {editProfile, save, pname, pbio, plocation, pwebsite, birthDate, addDob, switchTo } = t("editPorfileModal");
+  
   const HandleSave = async () => {
     const editedInfo = {
       name,
@@ -98,7 +105,7 @@ export default function EditProfile({ user, loggedInUser }) {
   return (
     <div>
       <button className="Edit-profile-btn" onClick={() => setOpen(true)}>
-        Edit Profile
+        {editProfile}
       </button>
 
       <Modal
@@ -111,14 +118,14 @@ export default function EditProfile({ user, loggedInUser }) {
             <IconButton onClick={() => setOpen(false)}>
               <CloseIcon />
             </IconButton>
-            <h2 className="header-title">Edit Profile</h2>
+            <h2 className="header-title">{editProfile}</h2>
             <button className="save-btn" onClick={HandleSave}>
-              Save
+              {save}
             </button>
           </div>
           <form className="fill-content">
             <div style={{ display: "flex" }}>
-              <h5>Name : </h5>
+              <h5>{pname}</h5>
               <TextField
                 className="text-field"
                 fullWidth
@@ -130,7 +137,7 @@ export default function EditProfile({ user, loggedInUser }) {
 
 
             <div style={{ display: "flex" }}>
-              <h5>Bio : </h5>
+              <h5>{pbio}</h5>
               <TextField
                 className="text-field"
                 fullWidth
@@ -140,7 +147,7 @@ export default function EditProfile({ user, loggedInUser }) {
               />
             </div>
             <div style={{ display: "flex" }}>
-              <h5>Location : </h5>
+              <h5>{plocation}</h5>
               <TextField
                 className="text-field"
                 fullWidth
@@ -152,7 +159,7 @@ export default function EditProfile({ user, loggedInUser }) {
               />
             </div>
             <div style={{ display: "flex" }}>
-              <h5>Website : </h5>
+              <h5>{pwebsite}</h5>
               <TextField
                 className="text-field"
                 fullWidth
@@ -165,7 +172,7 @@ export default function EditProfile({ user, loggedInUser }) {
             </div>
           </form>
           <div className="birthdate-section">
-            <p>Birth Date</p>
+            <p>{birthDate}</p>
             <p>.</p>
             <EditChild dob={dob} setDob={setDob} />
           </div>
@@ -173,10 +180,10 @@ export default function EditProfile({ user, loggedInUser }) {
             {loggedInUser[0]?.dob ? (
               <h2>{loggedInUser[0]?.dob}</h2>
             ) : (
-              <h2>{dob ? dob : "Add your date of birth"}</h2>
+              <h2>{dob ? dob : addDob}</h2>
             )}
             <div className="last-btn">
-              <h2>Switch to Professional</h2>
+              <h2>{switchTo}</h2>
               <ChevronRightIcon />
             </div>
           </div>

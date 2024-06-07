@@ -10,8 +10,12 @@ import Post from "../../Feed/Post/Post";
 import LockResetIcon from "@mui/icons-material/LockReset";
 import axios from "axios";
 import EditProfile from "../EditProfile/EditProfile";
+import { useTranslation } from "react-i18next";
 
 const MainPage = ({ user }) => {
+  const {t} = useTranslation();
+  const {tweets} = t("mainPage");
+
   const navigate = useNavigate();
   const [loggedInUser] = UseLoggedinUser();
   const [posts, setPosts] = useState([]);
@@ -198,7 +202,7 @@ const MainPage = ({ user }) => {
                     )}
                   </div>
                 </div>
-                <h4 className="tweetsText">Tweets</h4>
+                <h4 className="tweetsText">{tweets}</h4>
                 <hr />
               </div>
               {posts.map((p) => (
