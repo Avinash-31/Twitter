@@ -54,7 +54,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
       pLink = session.payment_link;
       subscriptionNumber = 0;
       // Update user's subscription status
-      if(pLink == process.env.YEARLY_SUBSCRIPTION_LINK){
+      if (pLink == process.env.YEARLY_SUBSCRIPTION_LINK) {
         // yearly subscription
         subscriptionNumber = 2;
         await userCollection.updateOne(
@@ -67,7 +67,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
           { $set: { subscriptionExpiry: Date.now() + 31536000000 } }
         );
       }
-      else if(pLink == process.env.MONTHLY_SUBSCRIPTION_LINK){
+      else if (pLink == process.env.MONTHLY_SUBSCRIPTION_LINK) {
         // monthly subsscription
         subscriptionNumber = 1
         await userCollection.updateOne(
@@ -94,8 +94,8 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (request, 
         }
       );
 
-      subscriptionType = subscriptionNumber == 2? "Yearly" : "Monthly";
-      amountPaid = subscriptionNumber == 2? "Rs 499" : "Rs 199"; 
+      subscriptionType = subscriptionNumber == 2 ? "Yearly" : "Monthly";
+      amountPaid = subscriptionNumber == 2 ? "Rs 499" : "Rs 199";
       // send mail with defined transporter object
       let info = await transporter.sendMail({
         from: process.env.EMAIL, // sender address
@@ -260,28 +260,46 @@ async function run() {
       if (!user) {
         return res.status(404).send("User not found")
       }
-      const { postCount, isSubscribed,subscriptionExpiry } = user;
+      const { postCount, isSubscribed, subscriptionExpiry, totalLikes, totalUpvotes} = user;
+      // update total likes and upvotes of all posts
+      const posts = await postCollection
+        .find({ email: email })
+        .toArray();
+      let totLikes = 0;
+      let totUpvotes = 0;
+      posts.forEach((post) => {
+        totLikes += post.likes;
+        totUpvotes += post.upvotes;
+      });
+      // update the user data
+      await userCollection.updateOne(
+        { email: email },
+        { $set: { totalLikes: totLikes, totalUpvotes: totUpvotes } }
+      );
+      
       res.json({
         postCount,
         isSubscribed,
         subscriptionExpiry,
+        totalLikes,
+        totalUpvotes
       })
     })
 
-    const {ObjectId} = require('mongodb');
+    const { ObjectId } = require('mongodb');
 
-    app.get("/userStat",async(req,res)=>{
+    app.get("/userStat", async (req, res) => {
       const postId = req.query.postid;
-      const post = await postCollection.findOne({_id : new ObjectId(postId)});
-      if(!post){
+      const post = await postCollection.findOne({ _id: new ObjectId(postId) });
+      if (!post) {
         return res.status(404).send("Post not found");
       }
-      const {email} = post;
-      const user = await userCollection.findOne({email : email});
-      if(!user){
+      const { email } = post;
+      const user = await userCollection.findOne({ email: email });
+      if (!user) {
         return res.status(404).send("User not found");
       }
-      const {isSubscribed} = user;
+      const { isSubscribed } = user;
       res.json({
         isSubscribed
       })
@@ -315,10 +333,53 @@ async function run() {
       res.send(updatedPost);
     });
 
+    app.patch("/posts/:id/deupvote", async (req, res) => {
+      const { id } = req.params;
+      const post = await postCollection.findOne({ _id: new mongoose.Types.ObjectId(id) });
+      if (!post) {
+        return res.status(404).send("Post not found");
+      }
+      const updatedPost = await postCollection.updateOne(
+        { _id: new mongoose.Types.ObjectId(id) },
+        { $set: { upvotes: post.upvotes - 1 } }
+      );
+      res.send(updatedPost);
+    });
+
+    //to patch likes
+    app.patch("/posts/:id/like", async (req, res) => {
+      const { id } = req.params;
+      const post = await postCollection.findOne({ _id: new mongoose.Types.ObjectId(id) });
+      if (!post) {
+        return res.status(404).send("Post not found");
+      }
+      const updatedPost = await postCollection.updateOne(
+        { _id: new mongoose.Types.ObjectId(id) },
+        { $set: { likes: post.likes + 1 } }
+      );
+      res.send(updatedPost);
+    });
+
+    app.patch("/posts/:id/dislike", async (req, res) => {
+      const { id } = req.params;
+      const post = await postCollection.findOne({ _id: new mongoose.Types.ObjectId(id) });
+      if (!post) {
+        return res.status(404).send("Post not found");
+      }
+      const updatedPost = await postCollection.updateOne(
+        { _id: new mongoose.Types.ObjectId(id) },
+        { $set: { likes: post.likes - 1 } }
+      );
+      res.send(updatedPost);
+    });
+
     app.post("/register", async (req, res) => {
       const user = req.body;
       user.isSubscribed = 0;
       user.postCount = 0;
+      user.points = 0;
+      user.totalLikes = 0;
+      user.totalUpvotes = 0;
       user.subscriptionExpiry = Date.now();
       const result = await userCollection.insertOne(user);
       res.send(result);

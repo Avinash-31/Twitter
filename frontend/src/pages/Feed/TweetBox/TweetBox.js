@@ -11,6 +11,9 @@ import auth from "../../../firebase.init";
 import { ThreeDots } from "react-loader-spinner";
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { useTranslation } from "react-i18next";
+import FiveKPlusIcon from '@mui/icons-material/FiveKPlus';
+import TokenIcon from '@mui/icons-material/Token';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 
 const TweetBox = () => {
@@ -34,6 +37,9 @@ const TweetBox = () => {
   const [subscriptionType, setSubscrtiptonType] = useState(" ");
   const [subscriptionExpiry, setSubscrtiptonExpiry] = useState(Date.now());
 
+  const [likesCount,setLikesCount] = useState(0);
+  const [upvotesCount,setUpvotesCount] = useState(0);
+
   // for otp
   const [otp1, setOtp1] = useState('');
   const [otp2, setOtp2] = useState('');
@@ -52,27 +58,36 @@ const TweetBox = () => {
   // for language
   const { t } = useTranslation();
   const { subsToPost, subscribe, whatsHappening, subsStatus, subsExpire, subsNot, limitReached, tweet } = t("tweetBox");
-  const { chooseText,noCredit,basic,free,free1,free2,free3,free4,pop,yearly,rsy,y1,y2,y3,buy,monthly,mp,limitExceed} = t("paymentModal")
-  const {enterotp,l1,verify} = t("otpModal");
-  
+  const { chooseText, noCredit, basic, free, free1, free2, free3, free4, pop, yearly, rsy, y1, y2, y3, buy, monthly, mp, limitExceed } = t("paymentModal")
+  const { enterotp, l1, verify } = t("otpModal");
+
   useEffect(() => {
-    fetch(`http://localhost:5000/userStatus?email=${email}`)
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/userStatus?email=${email}`);
+        const data = await response.json();
         setPostCount(data.postCount);
         setIsSubscribed(data.isSubscribed);
+        setLikesCount(data.totalLikes);
+        setUpvotesCount(data.totalUpvotes);
         const date = new Date(data.subscriptionExpiry);
         const formattedDate = date.toLocaleDateString();
         setSubscrtiptonExpiry(formattedDate);
-        if (data.isSubscribed == 2) {
-          setSubscrtiptonType("Yearly")
-        } else if (data.isSubscribed == 1) {
-          setSubscrtiptonType("Monthly")
+        if (data.isSubscribed === 2) {
+          setSubscrtiptonType("Yearly");
+        } else if (data.isSubscribed === 1) {
+          setSubscrtiptonType("Monthly");
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log(error);
-      });
+      }
+    };
+
+    const interval = setInterval(fetchData, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, [email]);
 
   // Function to send OTP
@@ -334,7 +349,8 @@ const TweetBox = () => {
         username: username,
         name: name,
         email: email,
-        upvotes: videoURL ? 1 : 0, // Add this line
+        upvotes: videoURL ? 1 : 0,
+        likes:0,
       };
       // console.log(userPost);
       setPost("");
@@ -426,6 +442,8 @@ const TweetBox = () => {
       {!isSubscribed ? (
         <div className="tweetBox__input" style={{ width: '100%' }}>
           <h4>{subsToPost}</h4>
+          <h6>Total Likes : {likesCount}</h6>
+          <h6>Total upvotes : {upvotesCount}</h6>
           <Button onClick={handlePayment}>{subscribe}</Button>
         </div>
       ) : null}
@@ -441,13 +459,44 @@ const TweetBox = () => {
           />
           {/* is user is subscribed show verified icon else InfoIcon */}
           {isSubscribed ?
-            <Tooltip title={`${subsStatus}${isSubscribed ? `${subscriptionType}${subsExpire}${subscriptionExpiry}` : `${subsNot} ${10 - postCount}`}`}>
-              <VerifiedIcon style={{ color: '#1DA1F2' }} />
-            </Tooltip>
+            <div style={{ display: "flex" }}>
+              <Tooltip title={`Upvotes Badge : 50k+ Upvotes for your posts altogether`}>
+                <FiveKPlusIcon style={{ color: '#fbc700' }}></FiveKPlusIcon>
+              </Tooltip>
+              {/* if postCount >50k plus then posts badge will be displayed */}
+              {postCount > 1 ? (
+                <Tooltip title={`Posts Badge : Badge for 50plus posts`
+                }>
+                  <TokenIcon style={{ color: 'black' }}></TokenIcon>
+                </Tooltip>
+              ) : null}
+              <Tooltip title={`Likes Badge : Badge for 50kplus likes`}>
+                <FavoriteIcon style={{ color: 'red' }}></FavoriteIcon>
+              </Tooltip>
+              <Tooltip title={`${subsStatus}${isSubscribed ? `${subscriptionType}${subsExpire}${subscriptionExpiry}` : `${subsNot} ${10 - postCount}`}`}>
+                <VerifiedIcon style={{ color: '#1DA1F2' }} />
+              </Tooltip>
+            </div>
+
             :
-            <Tooltip title={`${subsStatus}${isSubscribed ? `${subscriptionType}${subsExpire}${subscriptionExpiry}` : `${subsNot} ${10 - postCount}`}`}>
-              <InfoIcon />
-            </Tooltip>
+            <div>
+              <Tooltip title={`Upvotes Badge : 5k+ upvotes for your posts altogether`}>
+                <FiveKPlusIcon style={{ color: '#fbc700' }}></FiveKPlusIcon>
+              </Tooltip>
+              {/* if postCount >50k plus then posts badge will be displayed */}
+              {postCount > 50 ? (
+                <Tooltip title={`Posts Badge : Badge for 50plus posts`
+                }>
+                  <TokenIcon style={{ color: 'black' }}></TokenIcon>
+                </Tooltip>
+              ) : null}
+              <Tooltip title={`Likes Badge : Badge for 50kplus likes`}>
+                <FavoriteIcon style={{ color: 'red' }}></FavoriteIcon>
+              </Tooltip>
+              <Tooltip title={`${subsStatus}${isSubscribed ? `${subscriptionType}${subsExpire}${subscriptionExpiry}` : `${subsNot} ${10 - postCount}`}`}>
+                <InfoIcon />
+              </Tooltip>
+            </div>
           }
 
           {postCount > 9 && !isSubscribed ? (
