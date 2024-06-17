@@ -11,6 +11,9 @@
 .feed__header {
   position: sticky;
   top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: white;
   z-index: 100;
   border: 1px solid var(--twitter-background);
@@ -20,4 +23,23 @@
 .feed__header > h2 {
   font-size: 20px;
   font-weight: 800;
+}
+
+.btnIcon{
+  background-color: rgba(0, 0, 0, 0);
+  border-style: none;
+}
+
+.closeBtn{
+  position: absolute;
+  right: 1rem;
+  top:1rem;
+}
+
+.info{
+  display: flex;
+}
+
+#parent-modal-description{
+  flex-direction: column;
 }
