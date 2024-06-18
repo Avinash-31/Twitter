@@ -9,11 +9,12 @@ import UseLoggedInUser from "../../../hooks/UseLoggedInUser";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
 import { ThreeDots } from "react-loader-spinner";
-import VerifiedIcon from '@mui/icons-material/Verified';
 import { useTranslation } from "react-i18next";
-import FiveKPlusIcon from '@mui/icons-material/FiveKPlus';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import TokenIcon from '@mui/icons-material/Token';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import ThumbUpIcon from '@mui/icons-material/ArrowCircleUp';
+import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 
 
 const TweetBox = () => {
@@ -31,14 +32,15 @@ const TweetBox = () => {
   const [validVideo, setValidVideo] = useState(false);
   const [user] = useAuthState(auth);
   const email = user?.email;
+  const [isMisusing, setMisusing] = useState(false);
 
   const [postCount, setPostCount] = useState(0);
   const [isSubscribed, setIsSubscribed] = useState(0);
   const [subscriptionType, setSubscrtiptonType] = useState(" ");
   const [subscriptionExpiry, setSubscrtiptonExpiry] = useState(Date.now());
 
-  const [likesCount,setLikesCount] = useState(0);
-  const [upvotesCount,setUpvotesCount] = useState(0);
+  const [likesCount, setLikesCount] = useState(0);
+  const [upvotesCount, setUpvotesCount] = useState(0);
 
   // for otp
   const [otp1, setOtp1] = useState('');
@@ -70,6 +72,7 @@ const TweetBox = () => {
         setIsSubscribed(data.isSubscribed);
         setLikesCount(data.totalLikes);
         setUpvotesCount(data.totalUpvotes);
+        setMisusing(data.isMisusing);
         const date = new Date(data.subscriptionExpiry);
         const formattedDate = date.toLocaleDateString();
         setSubscrtiptonExpiry(formattedDate);
@@ -324,6 +327,10 @@ const TweetBox = () => {
 
   const handleTweet = (e) => {
     e.preventDefault();
+    if (isMisusing) {
+      alert("You are misusing the platform. Please refrain from spamming.");
+      return;
+    }
     if (user.providerData[0].providerId === "password") {
       fetch(`http://localhost:5000/loggedInUser?email=${email}`)
         .then((res) => res.json())
@@ -350,7 +357,7 @@ const TweetBox = () => {
         name: name,
         email: email,
         upvotes: videoURL ? 1 : 0,
-        likes:0,
+        likes: 0,
       };
       // console.log(userPost);
       setPost("");
@@ -442,8 +449,6 @@ const TweetBox = () => {
       {!isSubscribed ? (
         <div className="tweetBox__input" style={{ width: '100%' }}>
           <h4>{subsToPost}</h4>
-          <h6>Total Likes : {likesCount}</h6>
-          <h6>Total upvotes : {upvotesCount}</h6>
           <Button onClick={handlePayment}>{subscribe}</Button>
         </div>
       ) : null}
@@ -460,50 +465,107 @@ const TweetBox = () => {
           {/* is user is subscribed show verified icon else InfoIcon */}
           {isSubscribed ?
             <div style={{ display: "flex" }}>
-              <Tooltip title={`Upvotes Badge : 50k+ Upvotes for your posts altogether`}>
-                <FiveKPlusIcon style={{ color: '#fbc700' }}></FiveKPlusIcon>
+              <Tooltip
+                title={`${postCount > 1000 ? `${postCount} posts` : `${postCount} posts`}`}
+              >
+                {postCount > 1000 ? (
+                  <TokenIcon style={{ color: 'black' }} />
+                ) : postCount > 50 ? (
+                  <TokenIcon style={{ color: 'gray' }} />
+                ) : null}
               </Tooltip>
-              {/* if postCount >50k plus then posts badge will be displayed */}
-              {postCount > 1 ? (
-                <Tooltip title={`Posts Badge : Badge for 50plus posts`
-                }>
-                  <TokenIcon style={{ color: 'black' }}></TokenIcon>
-                </Tooltip>
-              ) : null}
-              <Tooltip title={`Likes Badge : Badge for 50kplus likes`}>
-                <FavoriteIcon style={{ color: 'red' }}></FavoriteIcon>
+
+              <Tooltip
+                title={`${likesCount > 10000 ? `${likesCount} likes` : `${likesCount} likes`}`}
+              >
+                {likesCount > 50000 ? (
+                  <FavoriteIcon style={{ color: 'red' }} />
+                ) : likesCount > 10000 ? (
+                  <FavoriteIcon style={{ color: 'magenta' }} />
+                ) : null}
               </Tooltip>
+
+
+              <Tooltip
+                title={`${upvotesCount > 50000 ? `${upvotesCount} upvotes` : `${upvotesCount} upvotes`}`}
+              >
+                {upvotesCount > 50000 ? (
+                  <ThumbUpIcon style={{ color: 'blue' }} />
+                ) : upvotesCount > 10000 ? (
+                  <ThumbUpIcon style={{ color: 'green' }} />
+                ) : null
+                }
+              </Tooltip>
+
+              <Tooltip
+                title={`${isMisusing ? 'Misusing! Please refraim from spamming to enable access to posts again' : 'Not Misusing'}`}
+              >
+                {isMisusing ? (
+                  <ThumbDownOffAltIcon style={{ color: 'red' }} />
+                ) : null}
+              </Tooltip>
+
               <Tooltip title={`${subsStatus}${isSubscribed ? `${subscriptionType}${subsExpire}${subscriptionExpiry}` : `${subsNot} ${10 - postCount}`}`}>
                 <VerifiedIcon style={{ color: '#1DA1F2' }} />
               </Tooltip>
             </div>
-
             :
             <div>
-              <Tooltip title={`Upvotes Badge : 5k+ upvotes for your posts altogether`}>
-                <FiveKPlusIcon style={{ color: '#fbc700' }}></FiveKPlusIcon>
+              <Tooltip
+                title={`${postCount > 1000 ? `${postCount} posts` : `${postCount} posts`}`}
+              >
+                {postCount > 1000 ? (
+                  <TokenIcon style={{ color: 'black' }} />
+                ) : postCount > 50 ? (
+                  <TokenIcon style={{ color: 'gray' }} />
+                ) : null}
               </Tooltip>
-              {/* if postCount >50k plus then posts badge will be displayed */}
-              {postCount > 50 ? (
-                <Tooltip title={`Posts Badge : Badge for 50plus posts`
-                }>
-                  <TokenIcon style={{ color: 'black' }}></TokenIcon>
-                </Tooltip>
-              ) : null}
-              <Tooltip title={`Likes Badge : Badge for 50kplus likes`}>
-                <FavoriteIcon style={{ color: 'red' }}></FavoriteIcon>
+
+              <Tooltip
+                title={`${likesCount > 10000 ? `${likesCount} likes` : `${likesCount} likes`}`}
+              >
+                {likesCount > 50000 ? (
+                  <FavoriteIcon style={{ color: 'red' }} />
+                ) : likesCount > 10000 ? (
+                  <FavoriteIcon style={{ color: 'magenta' }} />
+                ) : null}
               </Tooltip>
+
+
+              <Tooltip
+                title={`${upvotesCount > 50000 ? `${upvotesCount} upvotes` : `${upvotesCount} upvotes`}`}
+              >
+                {upvotesCount > 50000 ? (
+                  <ThumbUpIcon style={{ color: 'blue' }} />
+                ) : upvotesCount > 10000 ? (
+                  <ThumbUpIcon style={{ color: 'green' }} />
+                ) : null
+                }
+              </Tooltip>
+
+              <Tooltip
+                title={`${isMisusing ? 'Misusing! Please refraim from spamming to enable access to posts again' : 'Not Misusing'}`}
+              >
+                {isMisusing ? (
+                  <ThumbDownOffAltIcon style={{ color: 'red' }} />
+                ) : null}
+              </Tooltip>
+
               <Tooltip title={`${subsStatus}${isSubscribed ? `${subscriptionType}${subsExpire}${subscriptionExpiry}` : `${subsNot} ${10 - postCount}`}`}>
                 <InfoIcon />
               </Tooltip>
+
             </div>
           }
 
-          {postCount > 9 && !isSubscribed ? (
-            <p style={{ color: 'red' }}>{limitReached}</p>
-          ) : null}
           {/* <p>Subscription Status: {isSubscribed ? 'Subscribed' : 'Not Subscribed'}</p> */}
         </div>
+          {postCount > 9 && !isSubscribed ? (
+            <div style={{display:'flex'}}>
+              <p style={{ color: 'red' }}>{limitReached}</p>
+              
+            </div>
+          ) : null}
         <div className="imageIcon_tweetButton">
           <label htmlFor="image" className="imageIcon">
             {isLoading ? (

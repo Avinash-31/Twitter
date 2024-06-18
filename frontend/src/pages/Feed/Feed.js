@@ -4,18 +4,26 @@ import Post from "./Post/Post";
 import './Feed.css'
 import { useTranslation } from "react-i18next";
 import MoreIcon from '@mui/icons-material/More';
-import { Box, Modal } from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import VerifiedIcon from '@mui/icons-material/Verified';
-import FiveKPlusIcon from '@mui/icons-material/FiveKPlus';
 import TokenIcon from '@mui/icons-material/Token';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ThumbUpIcon from '@mui/icons-material/ArrowCircleUp';
+import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
+import { useAuthState } from "react-firebase-hooks/auth";
+import auth from "../../firebase.init";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [pts, setPts] = useState(0);
+  const [isSubscribed, setIsSubscribed] = useState(0);
+  const [user] = useAuthState(auth);
+  const email = user?.email;
+
   const { t } = useTranslation();
+  const { badges, verified, posts1, posts2, likes1, likes2, upvotes1, upvotes2, n1, n2 } = t("feed");
   useEffect(() => {
     fetch("http://localhost:5000/posts")
       .then((res) => res.json())
@@ -23,6 +31,18 @@ const Feed = () => {
         setPosts(data);
       });
   }, [posts]);
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/userStatus?email=${email}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setIsSubscribed(data.isSubscribed);
+        setPts(data.points);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [email]);
 
   const style = {
     position: 'absolute',
@@ -43,6 +63,65 @@ const Feed = () => {
     flexDirection: 'column'
   };
 
+  // one month
+  const oneMonth = async () => {
+    try {
+      if (pts >= 200 && !isSubscribed) {
+        // update the points  method = patch
+        const response = await fetch(`http://localhost:5000/convert?email=${email}&pts=${200}`, {
+          method: 'PATCH'
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setPts(data.points);
+        setIsSubscribed(data.isSubscribed);
+        // reload page
+        window.location.reload();
+      } else {
+        if (pts < 200) {
+          alert("Insufficient points!");
+        }
+        else {
+          alert("Already Subscribed");
+        }
+      }
+    }
+    catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  // one year
+  const oneYear = async () => {
+    try {
+      if (pts >= 2000 && !isSubscribed) {
+        // update the points  method = patch
+        const response = await fetch(`http://localhost:5000/convert?email=${email}&pts=${2000}`, {
+          method: 'PATCH'
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setPts(data.points);
+        setIsSubscribed(data.isSubscribed);
+        window.location.reload();
+      } else {
+        if (pts < 2000) {
+          alert("Insufficient points!");
+        }
+        else {
+          alert("Already Subscribed");
+        }
+      }
+    }
+    catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   const moreModal = (
     <Modal
       open={openModal}
@@ -50,37 +129,48 @@ const Feed = () => {
       aria-labelledby="parent-modal-title"
       aria-describedby="parent-modal-description"
     >
-      <Box sx={{ ...style, width: 200 }}>
+      <Box sx={{ ...style }}>
         <CloseIcon className="closeBtn" onClick={() => setOpenModal(false)} />
-        <h2 id="parent-modal-title">Badges</h2>
+        <h2 id="parent-modal-title">{badges}</h2>
+        <h5>Points : {pts}</h5>
         <p id="parent-modal-description">
           <div className="info">
-            <VerifiedIcon style={{ color: '#1DA1F2' }} />  : Plus Member
+            <VerifiedIcon style={{ color: '#1DA1F2' }} /> : {verified}
+          </div>
+          <div className="info">
+            <TokenIcon style={{ color: 'black' }} /> : {posts1}
+          </div>
+          <div className="info">
+            <TokenIcon style={{ color: 'grey' }} /> : {posts2}
+          </div>
+          <div className="info">
+            <FavoriteIcon style={{ color: 'red' }} /> : {likes1}
+          </div>
+          <div className="info">
+            <FavoriteIcon style={{ color: 'magenta' }} /> : {likes2}
+          </div>
+          <div className="info">
+            <ThumbUpIcon style={{ color: 'blue' }} /> : {upvotes1}
+          </div>
+          <div className="info">
+            <ThumbUpIcon style={{ color: 'green' }} /> : {upvotes2}
+          </div>
+          <div className="info">
+            <ThumbDownOffAltIcon style={{ color: 'red' }} /> : {n1} <br /> {n2}
           </div>
           <br />
-          <div className="info">
-            <TokenIcon style={{ color: 'black' }} /> Token 
-          </div>
-          <br />
-          <div className="info">
-            <TokenIcon style={{ color: 'grey' }} /> Token 
-          </div>
-          <br />
-          <div className="info">
-            <FavoriteIcon style={{ color: 'magenta' }} /> Favourite
-          </div>
-          <br />
-          <div className="info">
-            <FavoriteIcon style={{ color: 'red' }} /> Favourite
-          </div>
-          <br />
-          <div className="info">
-            <ThumbUpIcon style={{ color: 'green' }} /> : Upvotes
-          </div>
-          <br />
-          <div className="info">
-            <ThumbUpIcon style={{ color: 'blue' }} /> : Upvotes
-          </div>
+          <hr />
+          <p id="parent-modal-description">
+
+            10 points for each 10k likes
+            <br />
+            50 points for each 10k upvotes
+            <br />
+            Convert 200 points for 1 month Subscription
+            <Button onClick={oneMonth}>Convert</Button>
+            Convert 2000 points for 1 year Subscription
+            <Button onClick={oneYear}>Convert</Button>
+          </p>
         </p>
       </Box>
     </Modal >

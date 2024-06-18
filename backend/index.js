@@ -260,7 +260,7 @@ async function run() {
       if (!user) {
         return res.status(404).send("User not found")
       }
-      const { postCount, isSubscribed, subscriptionExpiry, totalLikes, totalUpvotes} = user;
+      const { postCount, isSubscribed, subscriptionExpiry, totalLikes, totalUpvotes, isMisusing, points} = user;
       // update total likes and upvotes of all posts
       const posts = await postCollection
         .find({ email: email })
@@ -271,10 +271,19 @@ async function run() {
         totLikes += post.likes;
         totUpvotes += post.upvotes;
       });
+      pts = 0;
+      if(totLikes/10000>0){
+        pts += Math.floor(totLikes/10000)*10;
+      }
+      if(totUpvotes/10000>0){
+        pts += Math.floor(totUpvotes/10000)*50;
+      }
+      pts = pts-user.toDeduct;
+      // console.log(pts);
       // update the user data
       await userCollection.updateOne(
         { email: email },
-        { $set: { totalLikes: totLikes, totalUpvotes: totUpvotes } }
+        { $set: { totalLikes: totLikes, totalUpvotes: totUpvotes, points:pts } }
       );
       
       res.json({
@@ -282,7 +291,9 @@ async function run() {
         isSubscribed,
         subscriptionExpiry,
         totalLikes,
-        totalUpvotes
+        totalUpvotes,
+        isMisusing,
+        points,
       })
     })
 
@@ -333,6 +344,26 @@ async function run() {
       res.send(updatedPost);
     });
 
+    app.patch("/convert", async (req, res) => {
+      const { email, pts } = req.query;
+      const user = await userCollection.findOne({ email: email });
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+      console.log(pts);
+      toDeductPts = parseInt(user.toDeduct) + parseInt(pts);
+      console.log(toDeductPts);
+      const updatedUser = await userCollection.updateOne(
+        { email: email },
+        { $set:{toDeduct: toDeductPts, isSubscribed: pts == 200 ? 1 : 2, subscriptionExpiry : Date.now() + 31536000000 } }
+      );
+      console.log(user.toDeduct);
+      console.log("Updated user : ",updatedUser);
+      res.json(updatedUser);
+    });
+
+
+
     app.patch("/posts/:id/deupvote", async (req, res) => {
       const { id } = req.params;
       const post = await postCollection.findOne({ _id: new mongoose.Types.ObjectId(id) });
@@ -381,6 +412,8 @@ async function run() {
       user.totalLikes = 0;
       user.totalUpvotes = 0;
       user.subscriptionExpiry = Date.now();
+      user.isMisusing = false;
+      user.toDeduct= 0;
       const result = await userCollection.insertOne(user);
       res.send(result);
     });

@@ -99,6 +99,18 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "Enter OTP to proceed",
                     l1: "We have sent otp to your mail ",
                     verify: "Verify OTP",
+                },
+                feed: {
+                    badges: "Badges",
+                    verified: "Subscribe to get the Verified Badge",
+                    posts1: "Post 1k+ tweets to earn this bade",
+                    posts2: "Post 50+ tweets to earn this bade",
+                    likes1: "Get 50k+ likes to earn this badge",
+                    likes2: "Get 10k+ likes to earn this badge",
+                    upvotes1: "Get 50k+ Upvotes to earn this badge",
+                    upvotes2: "Get 10k+ Upvotes to earn this badge",
+                    n1: "Negative badge to users who are misusing!",
+                    n2: "Will not be able to post for a few days",
                 }
             },
         },
@@ -193,6 +205,18 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "आगे बढ़ने के लिए OTP दर्ज करें",
                     l1: "हमने आपके मेल पर otp भेजा है ",
                     verify: "OTP सत्यापित करें",
+                },
+                feed: {
+                    badges: "बैज",
+                    verified: "सत्यापित बैज प्राप्त करने के लिए सब्सक्राइब करें",
+                    posts1: "इस बेड को कमाने के लिए 1k+ ट्वीट्स पोस्ट करें",
+                    posts2: "इस बेड को कमाने के लिए 50+ ट्वीट्स पोस्ट करें",
+                    likes1: "इस बेड को कमाने के लिए 50k+ लाइक्स प्राप्त करें",
+                    likes2: "इस बेड को कमाने के लिए 10k+ लाइक्स प्राप्त करें",
+                    upvotes1: "इस बेड को कमाने के लिए 50k+ अपवोट प्राप्त करें",
+                    upvotes2: "इस बेड को कमाने के लिए 10k+ अपवोट प्राप्त करें",
+                    n1: "उपयोगकर्ताओं को गलत तरीके से उपयोग करने वाले नकारात्मक बैज!",
+                    n2: "कुछ दिनों के लिए पोस्ट नहीं कर सकेगा"
                 }
             },
         },
@@ -287,6 +311,18 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "Entrez l'OTP pour continuer",
                     l1: "Nous avons envoyé un otp à votre mail ",
                     verify: "Vérifier l'OTP",
+                },
+                feed: {
+                    badges: "Badges",
+                    verified: "Abonnez-vous pour obtenir le badge vérifié",
+                    posts1: "Publiez 1k+ tweets pour gagner ce badge",
+                    posts2: "Publiez 50+ tweets pour gagner ce badge",
+                    likes1: "Obtenez 50k+ likes pour gagner ce badge",
+                    likes2: "Obtenez 10k+ likes pour gagner ce badge",
+                    upvotes1: "Obtenez 50k+ Upvotes pour gagner ce badge",
+                    upvotes2: "Obtenez 10k+ Upvotes pour gagner ce badge",
+                    n1: "Badge négatif pour les utilisateurs qui abusent!",
+                    n2: "Ne pourra pas poster pendant quelques jours",
                 }
             },
         },
@@ -381,6 +417,18 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "Ingrese OTP para continuar",
                     l1: "Hemos enviado otp a su correo ",
                     verify: "Verificar OTP",
+                },
+                feed: {
+                    badges: "Insignias",
+                    verified: "Suscríbete para obtener la insignia verificada",
+                    posts1: "Publica 1k+ tweets para ganar esta insignia",
+                    posts2: "Publica 50+ tweets para ganar esta insignia",
+                    likes1: "Obtén 50k+ likes para ganar esta insignia",
+                    likes2: "Obtén 10k+ likes para ganar esta insignia",
+                    upvotes1: "Obtén 50k+ Upvotes para ganar esta insignia",
+                    upvotes2: "Obtén 10k+ Upvotes para ganar esta insignia",
+                    n1: "¡Insignia negativa para los usuarios que están abusando!",
+                    n2: "No podrá publicar durante unos días",
                 }
             }
         },
@@ -475,7 +523,19 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "కొనసాగడానికి OTP నమోదు చేయండి",
                     l1: "మీ మెయిల్‌కి otp పంపాం ",
                     verify: "OTP నమోదు చేయండి",
-                }
+                },
+                feed: {
+                    badges: "బ్యాడ్జులు",
+                    verified: "ధృవీకరించడానికి చదవండి",
+                    posts1: "ఈ బేడ్‌ను పొందడానికి 1k+ ట్వీట్‌లను పోస్ట్ చేయండి",
+                    posts2: "ఈ బేడ్‌ను పొందడానికి 50+ ట్వీట్‌లను పోస్ట్ చేయండి",
+                    likes1: "ఈ బేడ్‌ను పొందడానికి 50k+ లైక్‌లను పొందండి",
+                    likes2: "ఈ బేడ్‌ను పొందడానికి 10k+ లైక్‌లను పొందండి",
+                    upvotes1: "ఈ బేడ్‌ను పొందడానికి 50k+ అప్‌వోట్‌లను పొందండి",
+                    upvotes2: "ఈ బేడ్‌ను పొందడానికి 10k+ అప్‌వోట్‌లను పొందండి",
+                    n1: "వినాశకారక బ్యాడ్జులకు ఉపయోగించే వాడులకు బ్యాడ్జు!",
+                    n2: "కొన్ని రోజులు పోస్ట్ చేయలేరు"
+                },
             }
         },
         ar: {
@@ -569,6 +629,18 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "أدخل OTP للمتابعة",
                     l1: "لقد أرسلنا otp إلى بريدك ",
                     verify: "تحقق من OTP",
+                },
+                feed: {
+                    badges: "شارات",
+                    verified: "اشترك للحصول على شارة تم التحقق منها",
+                    posts1: "نشر 1k+ تغريدات لكسب هذه الشارة",
+                    posts2: "نشر 50+ تغريدات لكسب هذه الشارة",
+                    likes1: "احصل على 50k+ إعجاب لكسب هذه الشارة",
+                    likes2: "احصل على 10k+ إعجاب لكسب هذه الشارة",
+                    upvotes1: "احصل على 50k+ Upvotes لكسب هذه الشارة",
+                    upvotes2: "احصل على 10k+ Upvotes لكسب هذه الشارة",
+                    n1: "شارة سلبية للمستخدمين الذين يسيئون الاستخدام!",
+                    n2: "لن يتمكن من النشر لبضعة أيام",
                 }
             }
         },
@@ -663,6 +735,18 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "Digite o OTP para continuar",
                     l1: "Enviamos otp para o seu e-mail ",
                     verify: "Verificar OTP",
+                },
+                feed: {
+                    badges: "Distintivos",
+                    verified: "Inscreva-se para obter o distintivo verificado",
+                    posts1: "Publique 1k+ tweets para ganhar este distintivo",
+                    posts2: "Publique 50+ tweets para ganhar este distintivo",
+                    likes1: "Obtenha 50k+ curtidas para ganhar este distintivo",
+                    likes2: "Obtenha 10k+ curtidas para ganhar este distintivo",
+                    upvotes1: "Obtenha 50k+ Upvotes para ganhar este distintivo",
+                    upvotes2: "Obtenha 10k+ Upvotes para ganhar este distintivo",
+                    n1: "Distintivo negativo para usuários que estão abusando!",
+                    n2: "Não poderá postar por alguns dias",
                 }
             }
         },
@@ -756,6 +840,18 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "தொடர ஒடிபி உள்ளிடவும்",
                     l1: "உங்கள் மின்னஞ்சலிக்கு otp அனுப்பப்பட்டுள்ளது ",
                     verify: "OTP சரிபார்க்கவும்",
+                },
+                feed: {
+                    badges: "பாட்ஜெஸ்",
+                    verified: "சரிபார்க்கப்பட்ட பாட்ஜெஸ் பெற சந்திக்கவும்",
+                    posts1: "இந்த பாட்ஜெஸ் பெற கூடுதல் 1k+ ட்வீட்களை பதிவு செய்யவும்",
+                    posts2: "இந்த பாட்ஜெஸ் பெற கூடுதல் 50+ ட்வீட்களை பதிவு செய்யவும்",
+                    likes1: "இந்த பாட்ஜெஸ் பெற கூடுதல் 50k+ லைக்குகளை பெறவும்",
+                    likes2: "இந்த பாட்ஜெஸ் பெற கூடுதல் 10k+ லைக்குகளை பெறவும்",
+                    upvotes1: "இந்த பாட்ஜெஸ் பெற கூடுதல் 50k+ அப்வோட்களை பெறவும்",
+                    upvotes2: "இந்த பாட்ஜெஸ் பெற கூடுதல் 10k+ அப்வோட்களை பெறவும்",
+                    n1: "பயன்படுத்தும் பயனர்களுக்கு எதிர்பார்ப்பான பாட்ஜ்!",
+                    n2: "சில நாட்களுக்கு பிறகு பதிவு செய்ய முடியாது",
                 }
             }
         },
@@ -849,8 +945,18 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "চালিয়ে যাওয়ার জন্য OTP লিখুন",
                     l1: "আমরা আপনার ইমেলে otp প্রেরণ করেছি ",
                     verify: "OTP যাচাই করুন",
-
-
+                },
+                feed: {
+                    badges: "ব্যাজ",
+                    verified: "যাচাইকৃত ব্যাজ পেতে সাবস্ক্রাইব করুন",
+                    posts1: "এই ব্যাজ পেতে 1k+ টুইট পোস্ট করুন",
+                    posts2: "এই ব্যাজ পেতে 50+ টুইট পোস্ট করুন",
+                    likes1: "এই ব্যাজ পেতে 50k+ লাইক পান",
+                    likes2: "এই ব্যাজ পেতে 10k+ লাইক পান",
+                    upvotes1: "এই ব্যাজ পেতে 50k+ Upvotes পান",
+                    upvotes2: "এই ব্যাজ পেতে 10k+ Upvotes পান",
+                    n1: "ব্যবহারকারীদের জন্য নেতিবাচক ব্যাজ!",
+                    n2: "কিছু দিন পোস্ট করতে পারবেন না",
                 }
             }
         },
@@ -944,6 +1050,18 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "جاری رکھنے کے لئے OTP درج کریں",
                     l1: "ہم نے آپ کے ای میل پر otp بھیجا ہے ",
                     verify: "OTP کی تصدیق کریں",
+                },
+                feed: {
+                    badges: "بیجز",
+                    verified: "تصدیق شدہ بیجز حاصل کرنے کے لئے سبسکرائب کریں",
+                    posts1: "اس بیج حاصل کرنے کے لئے 1k+ ٹویٹس کریں",
+                    posts2: "اس بیج حاصل کرنے کے لئے 50+ ٹویٹس کریں",
+                    likes1: "اس بیج حاصل کرنے کے لئے 50k+ پسندیدہ کریں",
+                    likes2: "اس بیج حاصل کرنے کے لئے 10k+ پسندیدہ کریں",
+                    upvotes1: "اس بیج حاصل کرنے کے لئے 50k+ Upvotes کریں",
+                    upvotes2: "اس بیج حاصل کرنے کے لئے 10k+ Upvotes کریں",
+                    n1: "استعمال کرنے والے صارفین کے لئے منفی بیج!",
+                    n2: "کچھ دنوں کے لئے پوسٹ نہیں کر سکتے",
                 }
             }
         }

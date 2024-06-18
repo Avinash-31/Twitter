@@ -139,19 +139,19 @@ const Post = ({ p }) => {
                 {/* if postCount >1000 then black coloured else if >100  then gray else none*/}
                 {postCount > 1000 ? (
                   <TokenIcon className="post_badge" style={{ color: 'black' }} />
-                ) : postCount > 100 ? (
+                ) : postCount > 50 ? (
                   <TokenIcon className="post_badge" style={{ color: 'gray' }} />
                 ) : null}
 
-                {likeCount > 1000 ? (
-                  <FavoriteIcon className="post_badge" style={{ color: 'magenta' }} />
-                ) : likeCount > 100000 ? (
+                {likeCount > 50000 ? (
                   <FavoriteIcon className="post_badge" style={{ color: 'red' }} />
+                ) : likeCount > 10000 ? (
+                  <FavoriteIcon className="post_badge" style={{ color: 'magenta' }} />
                 ) : null}
 
-                {upvotesCount>100000?(
+                {upvotesCount>50000?(
                   <ThumbUpIcon className="post_badge" style={{ color: 'blue' }} />
-                ):upvotesCount>1000?(
+                ):upvotesCount>10000?(
                   <ThumbUpIcon className="post_badge" style={{ color: 'green' }} />
                 ):null
                 }
