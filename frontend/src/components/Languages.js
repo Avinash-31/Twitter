@@ -163,7 +163,7 @@ const Languages = () => {
     }, [i18n, i18n.language]);
 
     return (
-        <div className='btn_container'>
+        <div style={{position:'fixed',left:'0rem'}}>
             <select onChange={(e) => changeLanguage(e.target.value)}>
                 {languages.map((language) => (
                     <option key={language.code} value={language.code}>

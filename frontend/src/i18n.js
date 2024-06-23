@@ -111,6 +111,11 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     upvotes2: "Get 10k+ Upvotes to earn this badge",
                     n1: "Negative badge to users who are misusing!",
                     n2: "Will not be able to post for a few days",
+                    t1: "10 points for each 10k likes",
+                    t2: "50 points for each 10k upvotes",
+                    t3: "Convert 200 points for 1 month Subscription",
+                    t4: "Convert",
+                    t5: "Convert 2000 points for 1 year Subscription"
                 }
             },
         },
@@ -216,7 +221,12 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     upvotes1: "इस बेड को कमाने के लिए 50k+ अपवोट प्राप्त करें",
                     upvotes2: "इस बेड को कमाने के लिए 10k+ अपवोट प्राप्त करें",
                     n1: "उपयोगकर्ताओं को गलत तरीके से उपयोग करने वाले नकारात्मक बैज!",
-                    n2: "कुछ दिनों के लिए पोस्ट नहीं कर सकेगा"
+                    n2: "कुछ दिनों के लिए पोस्ट नहीं कर सकेगा",
+                    t1: "10k लाइक्स के लिए 10 अंक",
+                    t2: "10k अपवोट के लिए 50 अंक",
+                    t3: "1 महीने की सब्सक्रिप्शन के लिए 200 अंक कनवर्ट करें",
+                    t4: "कनवर्ट करें",
+                    t5: "1 साल की सब्सक्रिप्शन के लिए 2000 अंक कनवर्ट करें"
                 }
             },
         },
@@ -323,6 +333,11 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     upvotes2: "Obtenez 10k+ Upvotes pour gagner ce badge",
                     n1: "Badge négatif pour les utilisateurs qui abusent!",
                     n2: "Ne pourra pas poster pendant quelques jours",
+                    t1: "10 points pour chaque 10k likes",
+                    t2: "50 points pour chaque 10k upvotes",
+                    t3: "Convertir 200 points pour 1 mois d'abonnement",
+                    t4: "Convertir",
+                    t5: "Convertir 2000 points pour 1 an d'abonnement"
                 }
             },
         },
@@ -429,6 +444,11 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     upvotes2: "Obtén 10k+ Upvotes para ganar esta insignia",
                     n1: "¡Insignia negativa para los usuarios que están abusando!",
                     n2: "No podrá publicar durante unos días",
+                    t1: "10 puntos por cada 10k likes",
+                    t2: "50 puntos por cada 10k upvotes",
+                    t3: "Convierte 200 puntos por 1 mes de suscripción",
+                    t4: "Convertir",
+                    t5: "Convierte 2000 puntos por 1 año de suscripción"
                 }
             }
         },
@@ -534,7 +554,12 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     upvotes1: "ఈ బేడ్‌ను పొందడానికి 50k+ అప్‌వోట్‌లను పొందండి",
                     upvotes2: "ఈ బేడ్‌ను పొందడానికి 10k+ అప్‌వోట్‌లను పొందండి",
                     n1: "వినాశకారక బ్యాడ్జులకు ఉపయోగించే వాడులకు బ్యాడ్జు!",
-                    n2: "కొన్ని రోజులు పోస్ట్ చేయలేరు"
+                    n2: "కొన్ని రోజులు పోస్ట్ చేయలేరు",
+                    t1: "10k లైక్‌లకు 10 పాయింట్‌లు",
+                    t2: "10k అప్‌వోట్‌లకు 50 పాయింట్‌లు",
+                    t3: "200 పాయింట్‌లను 1 నెల చదవడానికి మార్చండి",
+                    t4: "మార్చండి",
+                    t5: "2000 పాయింట్‌లను 1 సంవత్సరం చదవడానికి మార్చండి"
                 },
             }
         },
@@ -641,6 +666,11 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     upvotes2: "احصل على 10k+ Upvotes لكسب هذه الشارة",
                     n1: "شارة سلبية للمستخدمين الذين يسيئون الاستخدام!",
                     n2: "لن يتمكن من النشر لبضعة أيام",
+                    t1: "10 نقاط لكل 10k إعجاب",
+                    t2: "50 نقطة لكل 10k Upvotes",
+                    t3: "تحويل 200 نقطة لشهر اشتراك",
+                    t4: "تحويل",
+                    t5: "تحويل 2000 نقطة لعام اشتراك"
                 }
             }
         },
@@ -747,6 +777,11 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     upvotes2: "Obtenha 10k+ Upvotes para ganhar este distintivo",
                     n1: "Distintivo negativo para usuários que estão abusando!",
                     n2: "Não poderá postar por alguns dias",
+                    t1: "10 pontos para cada 10k curtidas",
+                    t2: "50 pontos para cada 10k upvotes",
+                    t3: "Converta 200 pontos para 1 mês de assinatura",
+                    t4: "Converter",
+                    t5: "Converta 2000 pontos para 1 ano de assinatura"
                 }
             }
         },
@@ -852,6 +887,11 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     upvotes2: "இந்த பாட்ஜெஸ் பெற கூடுதல் 10k+ அப்வோட்களை பெறவும்",
                     n1: "பயன்படுத்தும் பயனர்களுக்கு எதிர்பார்ப்பான பாட்ஜ்!",
                     n2: "சில நாட்களுக்கு பிறகு பதிவு செய்ய முடியாது",
+                    t1: "10k லைக்குகளுக்கு 10 புள்ளிகள்",
+                    t2: "10k அப்வோட்களுக்கு 50 புள்ளிகள்",
+                    t3: "200 புள்ளிகளை 1 மாதம் சந்திக்க மாற்றுங்கள்",
+                    t4: "மாற்று",
+                    t5: "2000 புள்ளிகளை 1 ஆண்டு சந்திக்க மாற்றுங்கள்"
                 }
             }
         },
@@ -957,6 +997,11 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     upvotes2: "এই ব্যাজ পেতে 10k+ Upvotes পান",
                     n1: "ব্যবহারকারীদের জন্য নেতিবাচক ব্যাজ!",
                     n2: "কিছু দিন পোস্ট করতে পারবেন না",
+                    t1: "10k লাইক প্রতি 10 পয়েন্ট",
+                    t2: "10k Upvotes প্রতি 50 পয",
+                    t3: "200 পয়েন্ট কনভার্ট করুন 1 মাসের সাবস্ক্রিপশনে",
+                    t4: "কনভার্ট",
+                    t5: "2000 পয়েন্ট কনভার্ট করুন 1 বছরের সাবস্ক্রিপশনে"
                 }
             }
         },
@@ -1062,6 +1107,11 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     upvotes2: "اس بیج حاصل کرنے کے لئے 10k+ Upvotes کریں",
                     n1: "استعمال کرنے والے صارفین کے لئے منفی بیج!",
                     n2: "کچھ دنوں کے لئے پوسٹ نہیں کر سکتے",
+                    t1: "10 پوائنٹس ہر 10k پسندیدہ کرنے کے لئے",
+                    t2: "10k Upvotes کے لئے 50 پوائنٹس",
+                    t3: "200 پوائنٹس کو 1 مہینے کی سبسکرپشن میں تبدیل کریں",
+                    t4: "تبدیل کریں",
+                    t5: "2000 پوائنٹس کو 1 سال کی سبسکرپشن میں تبدیل کریں"
                 }
             }
         }

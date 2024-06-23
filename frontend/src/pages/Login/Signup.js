@@ -26,7 +26,7 @@ const Signup = () => {
     useSignInWithGoogle(auth);
 
   if (user || googleUser) {
-    navigate("/");
+    // navigate("");
     console.log(user);
     console.log(googleUser);
   }

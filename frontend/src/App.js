@@ -26,15 +26,15 @@ function App() {
     <I18nextProvider i18n={i18n}>
       <div className="app">
         <Router>
-          <ProtectedRoutesWithoutLoading>
-            <Languages />
-          </ProtectedRoutesWithoutLoading>
+          {/* <ProtectedRoutesWithoutLoading>
+          </ProtectedRoutesWithoutLoading> */}
           <Routes>
             <Route path="/" element={<ProtectedRoute> <Home /> </ProtectedRoute>} >
               <Route index element={<Feed />} />
             </Route>
             <Route path="/home" element={
               <ProtectedRoute>
+                <Languages />
                 <Home />
               </ProtectedRoute>
             }

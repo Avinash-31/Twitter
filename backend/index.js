@@ -4,8 +4,15 @@ const mongoose = require("mongoose");
 const { MongoClient } = require("mongodb");
 const dotenv = require("dotenv");
 var bodyParser = require('body-parser');
+const useragent = require('express-useragent');
+const requestIp = require('request-ip');
+const geoip = require('geoip-lite');
+const UAParser = require('ua-parser-js');
+const otpGenerator = require('otp-generator');
+
 const app = express();
 app.use(cors('*'));
+
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 var nm = require('nodemailer');
 const endpointSecret = process.env.STRIPE_SIGNING_ACC;
@@ -17,6 +24,8 @@ const port = 5000;
 dotenv.config();
 
 app.use(cors());
+
+//paymnet route handling
 app.post('/webhook', express.raw({ type: 'application/json' }), async (request, response) => {
   const sig = request.headers['stripe-signature'];
   let event;
@@ -214,13 +223,77 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+//useragent and requrestIp
+app.use(useragent.express());
+app.use(requestIp.mw());
+
+
+// geoip
+app.use((req, res, next) => {
+  const ip = req.clientIp;
+  const geo = geoip.lookup(ip);
+  req.geoip = geo;
+  next();
 });
+
 
 const uri = process.env.MONGO_URL;
 
 const client = new MongoClient(uri, {});
+
+async function sendOtpToUser(otp, email) {
+  // Setup your nodemailer transporter here
+  var transporter = nm.createTransport(
+    {
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD,
+      }
+    }
+  );
+
+  let mailOptions = {
+    from: 'avinash.80031@gmail.com',
+    to: email,
+    subject: 'Your OTP',
+    text: `Your OTP is: ${otp}`
+  };
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+}
+
+// Middleware to check device and send OTP
+async function checkDeviceAndSendOtp(req, res, next) {
+  const ua = new UAParser(req.headers['user-agent']);
+  const device = ua.getDevice();
+  const browser = ua.getBrowser();
+
+  // Define your specific conditions for browsers or devices here
+  if (device.type === 'mobile' || browser.name === 'Chrome') {
+    const otp = otpGenerator.generate(4, { digits: true, alphabets: false, upperCase: false, specialChars: false });
+    // Ideally, store the OTP in your database associated with the user session or email
+    // For simplicity, storing in memory (not recommended for production)
+    req.session.otp = otp;
+
+    // Send OTP to user's email
+    // Assuming you have the user's email in the session or passed in some way
+    await sendOtpToUser(otp, req.session.userEmail);
+
+    // Redirect or inform the user to enter the OTP
+    // For API, you might want to just send a response indicating OTP is sent
+    return res.status(200).send("OTP sent to your email. Please verify to proceed.");
+  }
+  next();
+}
 
 async function run() {
   try {
@@ -228,10 +301,24 @@ async function run() {
     const postCollection = client.db("database").collection("posts");
     const userCollection = client.db("database").collection("users");
 
-
     app.get("/posts", async (req, res) => {
       const posts = (await postCollection.find().toArray()).reverse();
       res.json(posts);
+    });
+
+    app.get("/", (req, res) => {
+      // userInfo
+      const userInfo =
+      {
+        browser: req.useragent.browser,
+        os: req.useragent.os,
+        device: req.useragent.isDesktop ? "Desktop" : req.useragent.isMobile ? "Mobile" : "Tablet",
+        ip: req.clientIp,
+        geo: req.geoip,
+        loginTime: new Date(),
+      }
+      console.log(userInfo);
+      res.send(userInfo);
     });
 
     app.get("/users", async (req, res) => {
@@ -260,7 +347,7 @@ async function run() {
       if (!user) {
         return res.status(404).send("User not found")
       }
-      const { postCount, isSubscribed, subscriptionExpiry, totalLikes, totalUpvotes, isMisusing, points} = user;
+      const { postCount, isSubscribed, subscriptionExpiry, totalLikes, totalUpvotes, isMisusing, points } = user;
       // update total likes and upvotes of all posts
       const posts = await postCollection
         .find({ email: email })
@@ -272,20 +359,20 @@ async function run() {
         totUpvotes += post.upvotes;
       });
       pts = 0;
-      if(totLikes/10000>0){
-        pts += Math.floor(totLikes/10000)*10;
+      if (totLikes / 10000 > 0) {
+        pts += Math.floor(totLikes / 10000) * 10;
       }
-      if(totUpvotes/10000>0){
-        pts += Math.floor(totUpvotes/10000)*50;
+      if (totUpvotes / 10000 > 0) {
+        pts += Math.floor(totUpvotes / 10000) * 50;
       }
-      pts = pts-user.toDeduct;
+      pts = pts - user.toDeduct;
       // console.log(pts);
       // update the user data
       await userCollection.updateOne(
         { email: email },
-        { $set: { totalLikes: totLikes, totalUpvotes: totUpvotes, points:pts } }
+        { $set: { totalLikes: totLikes, totalUpvotes: totUpvotes, points: pts } }
       );
-      
+
       res.json({
         postCount,
         isSubscribed,
@@ -306,13 +393,20 @@ async function run() {
         return res.status(404).send("Post not found");
       }
       const { email } = post;
-      const user = await userCollection.findOne({ email: email });
+      const user = await userCollection.findOne({email: email});
+
       if (!user) {
         return res.status(404).send("User not found");
       }
-      const { isSubscribed } = user;
+      const { postCount, isSubscribed, subscriptionExpiry, totalLikes, totalUpvotes, isMisusing, points } = user;
       res.json({
-        isSubscribed
+        postCount,
+        isSubscribed,
+        subscriptionExpiry,
+        totalLikes,
+        totalUpvotes,
+        isMisusing,
+        points,
       })
     })
 
@@ -350,15 +444,15 @@ async function run() {
       if (!user) {
         return res.status(404).send("User not found");
       }
-      console.log(pts);
+      // console.log(pts);
       toDeductPts = parseInt(user.toDeduct) + parseInt(pts);
       console.log(toDeductPts);
       const updatedUser = await userCollection.updateOne(
         { email: email },
-        { $set:{toDeduct: toDeductPts, isSubscribed: pts == 200 ? 1 : 2, subscriptionExpiry : Date.now() + 31536000000 } }
+        { $set: { toDeduct: toDeductPts, isSubscribed: pts == 200 ? 1 : 2, subscriptionExpiry: Date.now() + 31536000000 } }
       );
-      console.log(user.toDeduct);
-      console.log("Updated user : ",updatedUser);
+      // console.log(user.toDeduct);
+      // console.log("Updated user : ",updatedUser);
       res.json(updatedUser);
     });
 
@@ -406,16 +500,35 @@ async function run() {
 
     app.post("/register", async (req, res) => {
       const user = req.body;
-      user.isSubscribed = 0;
-      user.postCount = 0;
-      user.points = 0;
-      user.totalLikes = 0;
-      user.totalUpvotes = 0;
-      user.subscriptionExpiry = Date.now();
-      user.isMisusing = false;
-      user.toDeduct= 0;
-      const result = await userCollection.insertOne(user);
-      res.send(result);
+      // if exists in database then dont register
+      const userExists = await userCollection.findOne({ email: user.email });
+      if (!userExists) {
+        user.isSubscribed = 0;
+        user.postCount = 0;
+        user.points = 0;
+        user.totalLikes = 0;
+        user.totalUpvotes = 0;
+        user.subscriptionExpiry = Date.now();
+        user.isMisusing = false;
+        user.toDeduct = 0;
+        // 
+
+        console.log(req.useragent);
+        const userInfo = {
+          browser: req.useragent.browser,
+          os: req.useragent.os,
+          device: req.useragent.isDesktop ? "Desktop" : req.useragent.isMobile ? "Mobile" : "Tablet",
+          ip: req.clientIp,
+          geo: req.geoip,
+          loginTime: new Date(),
+
+        }
+        // useInfo to user
+        user.userInfo = userInfo;
+        const result = await userCollection.insertOne(user);
+        res.send(result);
+      }
+
     });
 
     app.patch("/userUpdates/:email", async (req, res) => {

@@ -23,7 +23,7 @@ const Feed = () => {
   const email = user?.email;
 
   const { t } = useTranslation();
-  const { badges, verified, posts1, posts2, likes1, likes2, upvotes1, upvotes2, n1, n2 } = t("feed");
+  const { badges, verified, posts1, posts2, likes1, likes2, upvotes1, upvotes2, n1, n2, t1, t2, t3, t4, t5 } = t("feed");
   useEffect(() => {
     fetch("http://localhost:5000/posts")
       .then((res) => res.json())
@@ -162,14 +162,14 @@ const Feed = () => {
           <hr />
           <p id="parent-modal-description">
 
-            10 points for each 10k likes
+            {t1}
             <br />
-            50 points for each 10k upvotes
+            {t2}
             <br />
-            Convert 200 points for 1 month Subscription
-            <Button onClick={oneMonth}>Convert</Button>
-            Convert 2000 points for 1 year Subscription
-            <Button onClick={oneYear}>Convert</Button>
+            {t3}
+            <Button onClick={oneMonth}>{t4}</Button>
+            {t5}
+            <Button onClick={oneYear}>{t4}</Button>
           </p>
         </p>
       </Box>

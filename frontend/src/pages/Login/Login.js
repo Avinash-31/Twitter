@@ -9,6 +9,7 @@ import auth from "../../firebase.init";
 import GoogleButton from "react-google-button";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
+import axios from "axios";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,10 +22,32 @@ const Login = () => {
   const [signInWithGoogle, googleUser, googleLoading, googleError] =
     useSignInWithGoogle(auth);
 
-  if (user || googleUser) {
-    navigate("/home/profile");
-    console.log(user);
-    console.log(googleUser);
+  if (googleUser) {
+    // if user not in database then dont register await
+    axios
+      .get(`http://localhost:5000/loggedInUser?email=${googleUser.user.email}`)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.length === 0) {
+          const user = {
+            userName: googleUser.user.displayName,
+            name: googleUser.user.displayName,
+            email: googleUser.user.email,
+          };
+          // console.log(googleUser.user.displayName);
+          const { data } = axios.post("http://localhost:5000/register", user);
+          console.log(data);
+          navigate("/home/profile");
+        }
+        else{
+          navigate("/home/profile");
+        }
+      });
+  }
+  else {
+    if (user) {
+      navigate("/home/profile");
+    }
   }
   if (error) {
     alert(error.message);

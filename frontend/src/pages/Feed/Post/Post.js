@@ -103,6 +103,9 @@ const Post = ({ p }) => {
       .then((res) => res.json())
       .then((data) => {
         setIsSubscribed(data.isSubscribed);
+        setPostCount(data.postCount);
+        setLikesCount(data.totalLikes);
+        setUpvotesCount(data.totalUpvotes);
         console.log(isSubscribed);
       })
       .catch((error) => {
@@ -110,18 +113,15 @@ const Post = ({ p }) => {
       });
   }, [p._id]);
 
-  useEffect(() => {
-    fetch(`http://localhost:5000/userStatus?email=${email}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setPostCount(data.postCount);
-        setLikesCount(data.totalLikes);
-        setUpvotesCount(data.totalUpvotes);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [email]);
+  // useEffect(() => {
+  //   fetch(`http://localhost:5000/userStatus?email=${email}`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, [email]);
 
 
   return (
