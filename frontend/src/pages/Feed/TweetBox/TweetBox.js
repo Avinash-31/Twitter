@@ -15,7 +15,7 @@ import TokenIcon from '@mui/icons-material/Token';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ThumbUpIcon from '@mui/icons-material/ArrowCircleUp';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
-
+import CloseIcon from '@mui/icons-material/Close';
 
 const TweetBox = () => {
   // console.log(process.env.REACT_APP_IMBB);
@@ -173,11 +173,11 @@ const TweetBox = () => {
   const otpModal = (
     <Modal
       open={openModal}
-      onClose={() => setOpenModal(false)}
       aria-labelledby="parent-modal-title"
       aria-describedby="parent-modal-description"
     >
       <Box sx={{ ...style, width: 400 }}>
+        <CloseIcon className="closeBtn" onClick={() => setOpenModal(false)} />
         <h2 id="parent-modal-title">{enterotp}</h2>
         <p id="parent-modal-description">
           {l1}{user.email}
@@ -560,12 +560,12 @@ const TweetBox = () => {
 
           {/* <p>Subscription Status: {isSubscribed ? 'Subscribed' : 'Not Subscribed'}</p> */}
         </div>
-          {postCount > 9 && !isSubscribed ? (
-            <div style={{display:'flex'}}>
-              <p style={{ color: 'red' }}>{limitReached}</p>
-              
-            </div>
-          ) : null}
+        {postCount > 9 && !isSubscribed ? (
+          <div style={{ display: 'flex' }}>
+            <p style={{ color: 'red' }}>{limitReached}</p>
+
+          </div>
+        ) : null}
         <div className="imageIcon_tweetButton">
           <label htmlFor="image" className="imageIcon">
             {isLoading ? (

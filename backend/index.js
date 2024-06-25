@@ -241,60 +241,6 @@ const uri = process.env.MONGO_URL;
 
 const client = new MongoClient(uri, {});
 
-async function sendOtpToUser(otp, email) {
-  // Setup your nodemailer transporter here
-  var transporter = nm.createTransport(
-    {
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PASSWORD,
-      }
-    }
-  );
-
-  let mailOptions = {
-    from: 'avinash.80031@gmail.com',
-    to: email,
-    subject: 'Your OTP',
-    text: `Your OTP is: ${otp}`
-  };
-
-  transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-      console.log(error);
-    } else {
-      console.log('Email sent: ' + info.response);
-    }
-  });
-}
-
-// Middleware to check device and send OTP
-async function checkDeviceAndSendOtp(req, res, next) {
-  const ua = new UAParser(req.headers['user-agent']);
-  const device = ua.getDevice();
-  const browser = ua.getBrowser();
-
-  // Define your specific conditions for browsers or devices here
-  if (device.type === 'mobile' || browser.name === 'Chrome') {
-    const otp = otpGenerator.generate(4, { digits: true, alphabets: false, upperCase: false, specialChars: false });
-    // Ideally, store the OTP in your database associated with the user session or email
-    // For simplicity, storing in memory (not recommended for production)
-    req.session.otp = otp;
-
-    // Send OTP to user's email
-    // Assuming you have the user's email in the session or passed in some way
-    await sendOtpToUser(otp, req.session.userEmail);
-
-    // Redirect or inform the user to enter the OTP
-    // For API, you might want to just send a response indicating OTP is sent
-    return res.status(200).send("OTP sent to your email. Please verify to proceed.");
-  }
-  next();
-}
-
 async function run() {
   try {
     await client.connect();
@@ -393,7 +339,7 @@ async function run() {
         return res.status(404).send("Post not found");
       }
       const { email } = post;
-      const user = await userCollection.findOne({email: email});
+      const user = await userCollection.findOne({ email: email });
 
       if (!user) {
         return res.status(404).send("User not found");
@@ -409,6 +355,49 @@ async function run() {
         points,
       })
     })
+
+    // to get user login details and isBrowserVerified
+    app.get("/userInfo", async (req, res) => {
+      const email = req.query.email;
+      const user = await userCollection
+        .findOne
+        (
+          {
+            email: email
+          }
+        );
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+      // update the userInfo 
+      const userInfo = {
+        browser: req.useragent.browser,
+        os: req.useragent.os,
+        device: req.useragent.isDesktop ? "Desktop" : req.useragent.isMobile ? "Mobile" : "Tablet",
+        ip: req.clientIp,
+        geo: req.geoip,
+        loginTime: new Date(),
+      }
+      // update the user
+      user.userInfo = userInfo;
+      //update the database
+      // if browser is chrome and device is mobile set isBrowserVerified to false
+      if (userInfo.browser === "Chrome" || userInfo.device === 'Mobile' || userInfo.os === 'Linux') {
+        user.isBrowserVerified = false;
+      }
+      else{
+        user.isBrowserVerified = true;
+      }
+      // user.isBrowserVerified = false;
+      const result = await userCollection.updateOne(
+        {
+          email
+        },
+        { $set: user }
+      );
+      console.log(user);
+      res.json(user);
+    });
 
     app.post("/posts", async (req, res) => {
       const post = req.body;
@@ -436,6 +425,46 @@ async function run() {
         { $set: { upvotes: post.upvotes + 1 } }
       );
       res.send(updatedPost);
+    });
+
+    // update isBrowserVerified route
+    app.patch("/user/:email", async (req, res) => {
+      const { email } = req.params;
+      const user = await userCollection
+        .findOne
+        (
+          {
+            email: email
+          }
+        );
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+      // update the userInfo
+      const userInfo = {
+        browser: req.useragent.browser,
+        os: req.useragent.os,
+        device: req.useragent.isDesktop ? "Desktop" : req.useragent.isMobile ? "Mobile" : "Tablet",
+        ip: req.clientIp,
+        geo: req.geoip,
+        loginTime: new Date(),
+      }
+      // if browser is chrome and device is mobile set isBrowserVerified to false
+      if (userInfo.browser === 'Chrome' && userInfo.device === 'Mobile') {
+        user.isBrowserVerified = false;
+      }
+      else {
+        user.isBrowserVerified = true;
+      }
+      // useInfo to user
+      user.userInfo = userInfo;
+      const result = await userCollection.updateOne(
+        {
+          email
+        },
+        { $set: user }
+      );
+      res.send(result);
     });
 
     app.patch("/convert", async (req, res) => {
@@ -511,7 +540,7 @@ async function run() {
         user.subscriptionExpiry = Date.now();
         user.isMisusing = false;
         user.toDeduct = 0;
-        // 
+        user.isBrowserVerified = true;
 
         console.log(req.useragent);
         const userInfo = {
@@ -522,6 +551,10 @@ async function run() {
           geo: req.geoip,
           loginTime: new Date(),
 
+        }
+        // if browser is chrome and device is mobile set isBrowserVerified to false
+        if (userInfo.browser === 'Chrome' && userInfo.device === 'Mobile') {
+          user.isBrowserVerified = false;
         }
         // useInfo to user
         user.userInfo = userInfo;
@@ -592,20 +625,20 @@ async function run() {
       let otp = req.body.otp;
 
       if (!savedOTPS.hasOwnProperty(email)) {
-        return res.status(400).send("Email not found");
+        return res.send("Email not found");
       }
 
       if (!savedOTPS[email]) {
-        return res.status(400).send("OTP expired");
+        return res.send("OTP expired");
       }
       console.log(`Received email: ${email}`);
       console.log(`Received OTP: ${otp}`);
       console.log(`Stored OTP: ${savedOTPS[email]}`);
-      if (savedOTPS[email] == otp) {
+      if (savedOTPS[email] === otp) {
         delete savedOTPS[email];
         res.send("Verified");
       } else {
-        res.status(500).send("Invalid OTP");
+        res.status(400).send("Invalid OTP");
       }
     });
   } catch (error) {

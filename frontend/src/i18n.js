@@ -99,6 +99,7 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "Enter OTP to proceed",
                     l1: "We have sent otp to your mail ",
                     verify: "Verify OTP",
+                    enterOtp: "Enter otp to verify your device  ",
                 },
                 feed: {
                     badges: "Badges",
@@ -210,6 +211,7 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "आगे बढ़ने के लिए OTP दर्ज करें",
                     l1: "हमने आपके मेल पर otp भेजा है ",
                     verify: "OTP सत्यापित करें",
+                    enterOtp:"अपनी डिवाइस को सत्यापित करने के लिए otp दर्ज करें  ",
                 },
                 feed: {
                     badges: "बैज",
@@ -321,6 +323,7 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "Entrez l'OTP pour continuer",
                     l1: "Nous avons envoyé un otp à votre mail ",
                     verify: "Vérifier l'OTP",
+                    enterOtp: "Entrez l'otp pour vérifier votre appareil  ",
                 },
                 feed: {
                     badges: "Badges",
@@ -432,6 +435,7 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "Ingrese OTP para continuar",
                     l1: "Hemos enviado otp a su correo ",
                     verify: "Verificar OTP",
+                    enterOtp: "Ingrese otp para verificar su dispositivo  ",
                 },
                 feed: {
                     badges: "Insignias",
@@ -543,6 +547,7 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "కొనసాగడానికి OTP నమోదు చేయండి",
                     l1: "మీ మెయిల్‌కి otp పంపాం ",
                     verify: "OTP నమోదు చేయండి",
+                    enterOtp: "మీ పరికరంను నమోదు చేయడానికి otp నమోదు చేయండి  ",
                 },
                 feed: {
                     badges: "బ్యాడ్జులు",
@@ -654,6 +659,7 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "أدخل OTP للمتابعة",
                     l1: "لقد أرسلنا otp إلى بريدك ",
                     verify: "تحقق من OTP",
+                    enterOtp: "أدخل otp للتحقق من جهازك  ",
                 },
                 feed: {
                     badges: "شارات",
@@ -765,6 +771,7 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "Digite o OTP para continuar",
                     l1: "Enviamos otp para o seu e-mail ",
                     verify: "Verificar OTP",
+                    enterOtp: "Digite otp para verificar seu dispositivo  ",
                 },
                 feed: {
                     badges: "Distintivos",
@@ -875,6 +882,7 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "தொடர ஒடிபி உள்ளிடவும்",
                     l1: "உங்கள் மின்னஞ்சலிக்கு otp அனுப்பப்பட்டுள்ளது ",
                     verify: "OTP சரிபார்க்கவும்",
+                    enterOtp: "உங்கள் சாதனத்தை சரிபார்க்க ஒடிபி உள்ளிடவும்  ",
                 },
                 feed: {
                     badges: "பாட்ஜெஸ்",
@@ -985,6 +993,7 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "চালিয়ে যাওয়ার জন্য OTP লিখুন",
                     l1: "আমরা আপনার ইমেলে otp প্রেরণ করেছি ",
                     verify: "OTP যাচাই করুন",
+                    enterOtp: "আপনার ডিভাইস যাচাই করতে otp লিখুন  ",
                 },
                 feed: {
                     badges: "ব্যাজ",
@@ -1095,6 +1104,7 @@ i18n.use(LanguageDetector).use(initReactI18next).init({
                     enterotp: "جاری رکھنے کے لئے OTP درج کریں",
                     l1: "ہم نے آپ کے ای میل پر otp بھیجا ہے ",
                     verify: "OTP کی تصدیق کریں",
+                    enterOtp: "آپ کی ڈیوائس کی تصدیق کرنے کے لئے otp درج کریں  ",
                 },
                 feed: {
                     badges: "بیجز",

@@ -100,7 +100,6 @@ const Languages = () => {
     const otpModal = (
         <Modal
             open={openModal}
-            onClose={() => setOpenModal(false)}
             aria-labelledby="parent-modal-title"
             aria-describedby="parent-modal-description"
         >

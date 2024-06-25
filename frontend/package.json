@@ -11,6 +11,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.8",
+    "express-useragent": "^1.0.15",
     "firebase": "^10.9.0",
     "i18next": "^23.11.5",
     "i18next-browser-languagedetector": "^8.0.0",
@@ -24,6 +25,7 @@
     "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
     "react-twitter-embed": "^4.0.4",
+    "request-ip": "^3.3.0",
     "styled-components": "^6.1.11",
     "twilio": "^5.1.1",
     "web-vitals": "^2.1.4"
