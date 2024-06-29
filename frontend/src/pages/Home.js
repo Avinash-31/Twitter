@@ -10,7 +10,6 @@ import UseLoggedInUser from "../hooks/UseLoggedInUser";
 import axios from "axios";
 import { Box, Button, Modal, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import CloseIcon from '@mui/icons-material/Close';
 
 const Home = () => {
   const [user] = useAuthState(auth);
@@ -23,6 +22,7 @@ const Home = () => {
   const [ipValue, setIpValue] = useState("");
   var isUserInfoVerfied = true;
   const [check, setCheck] = useState(false);
+
 
   const { l1, verify, enterOtp } = t("otpModal");
   // console.log(loggedInUser);
@@ -39,6 +39,24 @@ const Home = () => {
 
 
   const [openModal, setOpenModal] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // fetch from router /time
+      axios.get("http://localhost:5000/time").then((res) => {
+        if (res.data === "Access granted") {
+          // do something
+        } else {
+          // logout the user and redirect
+          signOut(auth).then(() => {
+            window.location.href = "/login";
+          });
+        }
+      });
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Function to send OTP
   const sendOtp = async () => {

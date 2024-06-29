@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import Signup from "./pages/Login/Signup";
@@ -21,7 +21,8 @@ import ProtectedRoutesWithoutLoading from "./pages/ProtectedRoutesWithoutLoading
 
 
 function App() {
-
+  const[access,setAcess] = useState(true);
+  
   return (
     <I18nextProvider i18n={i18n}>
       <div className="app">

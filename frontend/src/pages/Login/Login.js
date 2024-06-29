@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TwitterImage from "../../assets/images/twitter.png";
 import TwitterIcon from "@mui/icons-material/X";
 import {
@@ -10,10 +10,13 @@ import GoogleButton from "react-google-button";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import axios from "axios";
+import { Modal, Box } from "@mui/material";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [access, setAcess] = useState(true);
+  const[openModal,setOpenModal] = useState(false);
   const navigate = useNavigate();
 
   const [signInWithEmailAndPassword, user, loading, error] =
@@ -22,7 +25,52 @@ const Login = () => {
   const [signInWithGoogle, googleUser, googleLoading, googleError] =
     useSignInWithGoogle(auth);
 
-  if (googleUser) {
+  // style for modal
+  const style = {
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    border: '1px solid #000',
+    boxShadow: 24,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    pt: 2,
+    px: 4,
+    pb: 3,
+  };
+  const accessModal = (
+    <Modal
+      open={openModal}
+      aria-labelledby="parent-modal-title"
+      aria-describedby="parent-modal-description"
+    >
+      <Box sx={{ ...style, width: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+        <h2>Access denied</h2>
+        <h4>Login between 9:00AM and 9:00PM to access the services</h4>
+      </Box>
+    </Modal>
+  );
+  useEffect(() => {
+    // fetch from router /time
+    axios.get("http://localhost:5000/time").then((res) => {
+      if (res.data === "Access granted") {
+        console.log("Access granted");
+        setAcess(true);
+        setOpenModal(false);
+      }
+      else {
+        setAcess(false);
+        // alert("Access denied!")
+        setOpenModal(true);
+      }
+    });
+  });
+
+  if (googleUser && access) {
     // if user not in database then dont register await
     axios
       .get(`http://localhost:5000/loggedInUser?email=${googleUser.user.email}`)
@@ -39,7 +87,7 @@ const Login = () => {
           console.log(data);
           navigate("/home/profile");
         }
-        else{
+        else {
           navigate("/home/profile");
         }
       });
@@ -120,6 +168,7 @@ const Login = () => {
           </form>
         </div>
       </div>
+      {accessModal}
     </div>
   );
 };

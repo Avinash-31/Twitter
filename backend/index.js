@@ -236,7 +236,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 const uri = process.env.MONGO_URL;
 
 const client = new MongoClient(uri, {});
@@ -266,6 +265,29 @@ async function run() {
       console.log(userInfo);
       res.send(userInfo);
     });
+
+    app.get("/time", async (req, res) => {
+      const currTime = new Date();
+      //set minutes as well
+      // start and end should be exactly 9:00 Am and 3:00PM
+      const start = new Date(currTime.getFullYear(), currTime.getMonth(), currTime.getDate(), 9
+      );
+      const end = new Date(currTime.getFullYear(), currTime.getMonth(), currTime.getDate(), 21
+      );
+      // get device type
+      const device = req.useragent.isDesktop ? "Desktop" : req.useragent.isMobile ? "Mobile" : "Tablet";
+      if (device === "Mobile") {
+        if (currTime >= start && currTime <= end) {
+          res.send("Access granted");
+        }
+        else {
+          res.send("Access denied");
+        }
+      }
+      else{
+        res.send("Access granted");
+      }
+    })
 
     app.get("/users", async (req, res) => {
       const user = await userCollection.find().toArray();
@@ -330,6 +352,8 @@ async function run() {
       })
     })
 
+
+
     const { ObjectId } = require('mongodb');
 
     app.get("/userStat", async (req, res) => {
@@ -385,7 +409,7 @@ async function run() {
       if (userInfo.browser === "Chrome" || userInfo.device === 'Mobile' || userInfo.os === 'Linux') {
         user.isBrowserVerified = false;
       }
-      else{
+      else {
         user.isBrowserVerified = true;
       }
       // user.isBrowserVerified = false;
