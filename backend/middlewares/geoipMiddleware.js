@@ -1,5 +1,7 @@
+const express = require('express');
 const geoip = require('geoip-lite');
 const requestIp = require('request-ip');
+const app = express();
 
 app.use(requestIp.mw());
 
