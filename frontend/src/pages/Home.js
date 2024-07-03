@@ -43,7 +43,7 @@ const Home = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       // fetch from router /time
-      axios.get("http://localhost:5000/time").then((res) => {
+      axios.get("http://localhost:5000/auth/time").then((res) => {
         if (res.data === "Access granted") {
           // do something
         } else {
@@ -65,7 +65,7 @@ const Home = () => {
       setOtp2('');
       setOtp3('');
       setOtp4('');
-      const response = await axios.post('http://localhost:5000/sendotp', { email: user.email });
+      const response = await axios.post('http://localhost:5000/auth/otp', { email: user.email });
       if (response.data === 'sent otp') {
         setIsOtpSent(true);
         setOpenModal(true);
@@ -79,7 +79,7 @@ const Home = () => {
   const verifyOtp = async () => {
     try {
       setOtp(otp1 + otp2 + otp3 + otp4);
-      const response = await axios.post('http://localhost:5000/verify', { email: user.email, otp });
+      const response = await axios.post('http://localhost:5000/auth/verify', { email: user.email, otp });
       if (response.data === 'Verified') {
         setIsOtpVerified(true);
         isUserInfoVerfied = true;
@@ -181,7 +181,7 @@ const Home = () => {
   const fetchData = async () => {
     try {
       if (!check) {
-        const response = await fetch(`http://localhost:5000/userInfo?email=${email}`);
+        const response = await fetch(`http://localhost:5000/auth/userInfo?email=${email}`);
         const data = await response.json();
         setBrowserType(data.userInfo.browser);
         setOsType(data.userInfo.os);

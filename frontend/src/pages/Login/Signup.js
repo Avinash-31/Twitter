@@ -47,7 +47,7 @@ const Signup = () => {
       name: name,
       email: email,
     };
-    const { data } = axios.post("http://localhost:5000/register", user);
+    const { data } = axios.post("http://localhost:5000/auth/register", user);
     console.log(data);
     navigate("/login");
   };

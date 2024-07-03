@@ -56,7 +56,7 @@ const Login = () => {
   );
   useEffect(() => {
     // fetch from router /time
-    axios.get("http://localhost:5000/time").then((res) => {
+    axios.get("http://localhost:5000/auth/time").then((res) => {
       if (res.data === "Access granted") {
         console.log("Access granted");
         setAcess(true);
@@ -73,7 +73,7 @@ const Login = () => {
   if (googleUser && access) {
     // if user not in database then dont register await
     axios
-      .get(`http://localhost:5000/loggedInUser?email=${googleUser.user.email}`)
+      .get(`http://localhost:5000/auth/loggedInUser?email=${googleUser.user.email}`)
       .then((res) => {
         console.log(res.data);
         if (res.data.length === 0) {
@@ -83,7 +83,7 @@ const Login = () => {
             email: googleUser.user.email,
           };
           // console.log(googleUser.user.displayName);
-          const { data } = axios.post("http://localhost:5000/register", user);
+          const { data } = axios.post("http://localhost:5000/auth/register", user);
           console.log(data);
           navigate("/home/profile");
         }
@@ -100,7 +100,6 @@ const Login = () => {
   if (error) {
     alert(error.message);
     console.log(error.message);
-    console.log(errorMessage);
   }
   if (loading) {
     console.log("loading...");

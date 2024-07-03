@@ -32,7 +32,7 @@ const Post = ({ p }) => {
   const handleUpvote = async () => {
     if (!hasUpvoted) {
       try {
-        const response = await fetch(`http://localhost:5000/posts/${p._id}/upvote`, {
+        const response = await fetch(`http://localhost:5000/posts/post/${p._id}/upvote`, {
           method: 'PATCH'
         });
         if (!response.ok) {
@@ -47,7 +47,7 @@ const Post = ({ p }) => {
     } else {
       // decrement the upvote in post
       try {
-        const response = await fetch(`http://localhost:5000/posts/${p._id}/deupvote`, {
+        const response = await fetch(`http://localhost:5000/posts/post/${p._id}/deupvote`, {
           method: 'PATCH'
         });
         if (!response.ok) {
@@ -67,7 +67,7 @@ const Post = ({ p }) => {
   const handleLike = async () => {
     if (!hasLiked) {
       try {
-        const response = await fetch(`http://localhost:5000/posts/${p._id}/like`, {
+        const response = await fetch(`http://localhost:5000/posts/post/${p._id}/like`, {
           method: 'PATCH'
         });
         if (!response.ok) {
@@ -82,7 +82,7 @@ const Post = ({ p }) => {
     } else {
       // decrement the like count in post
       try {
-        const response = await fetch(`http://localhost:5000/posts/${p._id}/dislike`, {
+        const response = await fetch(`http://localhost:5000/posts/post/${p._id}/dislike`, {
           method: 'PATCH'
         });
         if (!response.ok) {
@@ -99,7 +99,7 @@ const Post = ({ p }) => {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:5000/userStat?postid=${p._id}`)
+    fetch(`http://localhost:5000/auth/userStat?postid=${p._id}`)
       .then((res) => res.json())
       .then((data) => {
         setIsSubscribed(data.isSubscribed);

@@ -25,7 +25,7 @@ const Feed = () => {
   const { t } = useTranslation();
   const { badges, verified, posts1, posts2, likes1, likes2, upvotes1, upvotes2, n1, n2, t1, t2, t3, t4, t5 } = t("feed");
   useEffect(() => {
-    fetch("http://localhost:5000/posts")
+    fetch("http://localhost:5000/posts/posts")
       .then((res) => res.json())
       .then((data) => {
         setPosts(data);
@@ -33,7 +33,7 @@ const Feed = () => {
   }, [posts]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/userStatus?email=${email}`)
+    fetch(`http://localhost:5000/auth/userStatus?email=${email}`)
       .then((res) => res.json())
       .then((data) => {
         setIsSubscribed(data.isSubscribed);
@@ -68,7 +68,7 @@ const Feed = () => {
     try {
       if (pts >= 200 && !isSubscribed) {
         // update the points  method = patch
-        const response = await fetch(`http://localhost:5000/convert?email=${email}&pts=${200}`, {
+        const response = await fetch(`http://localhost:5000/payment/convert?email=${email}&pts=${200}`, {
           method: 'PATCH'
         });
         if (!response.ok) {
@@ -98,7 +98,7 @@ const Feed = () => {
     try {
       if (pts >= 2000 && !isSubscribed) {
         // update the points  method = patch
-        const response = await fetch(`http://localhost:5000/convert?email=${email}&pts=${2000}`, {
+        const response = await fetch(`http://localhost:5000/payment/convert?email=${email}&pts=${2000}`, {
           method: 'PATCH'
         });
         if (!response.ok) {

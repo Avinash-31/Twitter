@@ -66,7 +66,7 @@ const Languages = () => {
             setOtp2('');
             setOtp3('');
             setOtp4('');
-            const response = await axios.post('http://localhost:5000/sendotp', { email: user.email });
+            const response = await axios.post('http://localhost:5000/auth/otp', { email: user.email });
             if (response.data === 'sent otp') {
                 setIsOtpSent(true);
                 setOpenModal(true);
@@ -80,7 +80,7 @@ const Languages = () => {
     const verifyOtp = async () => {
         try {
             setOtp(otp1 + otp2 + otp3 + otp4);
-            const response = await axios.post('http://localhost:5000/verify', { email: user.email, otp });
+            const response = await axios.post('http://localhost:5000/auth/verify', { email: user.email, otp });
             if (response.data === 'Verified') {
                 setIsOtpVerified(true);
                 setOpenModal(false);
