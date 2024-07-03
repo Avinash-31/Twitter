@@ -42,7 +42,7 @@ exports.sendOTP = (req, res) => {
   var options = {
     from: process.env.EMAIL,
     to: `${email}`,
-    subject: 'Testing node emails',
+    subject: 'Email verification for app services',
     html: `<p>Enter the otp: ${otp} to verify your email address</p>`
   };
 
@@ -123,15 +123,15 @@ exports.checkTimeAndDevice = (req, res) => {
 
   const device = req.useragent.isDesktop ? 'Desktop' : req.useragent.isMobile ? 'Mobile' : 'Tablet';
 
-  // if (device === 'Mobile') {
-  //   if (currTime >= start && currTime <= end) {
-  //     res.send('Access granted');
-  //   } else {
-  //     res.send('Access denied');
-  //   }
-  // } else {
-  //   res.send('Access granted');
-  // }
+  if (device === 'Mobile') {
+    if (currTime >= start && currTime <= end) {
+      res.send('Access granted');
+    } else {
+      res.send('Access denied');
+    }
+  } else {
+    res.send('Access granted');
+  }
   res.send('Access granted');
 };
 

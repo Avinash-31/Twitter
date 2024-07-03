@@ -131,7 +131,7 @@ async function handleWebhook(request, response) {
                       Hey ${session.customer_details.name},
                     </h2>
                     <p class="fs-sm">
-                      This is the receipt for a payment of <strong>${amountPaid}</strong> (Rupee) you made to Twitter Subscription.
+                      This is the receipt for a payment of <strong>${amountPaid}</strong> (Rupees) you made to Twitter Subscription.
                     </p>
 
                     <div class="border-top border-gray-200 pt-4 mt-4">
@@ -142,7 +142,7 @@ async function handleWebhook(request, response) {
                         </div>
                         <div class="col-md-6 text-md-end">
                           <div class="text-muted mb-2">Payment Date</div>
-                          <strong>${Date.now}</strong>
+                          <strong>${new Date.now() + 2592000000}</strong>
                         </div>
                       </div>
                     </div>

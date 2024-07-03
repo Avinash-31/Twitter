@@ -66,7 +66,7 @@ const TweetBox = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/auth/userStatus?email=${email}`);
+        const response = await fetch(`https://twitter-qgxu.onrender.com/auth/userStatus?email=${email}`);
         const data = await response.json();
         setPostCount(data.postCount);
         setIsSubscribed(data.isSubscribed);
@@ -100,7 +100,7 @@ const TweetBox = () => {
       setOtp2('');
       setOtp3('');
       setOtp4('');
-      const response = await axios.post('http://localhost:5000/auth/otp', { email: user.email });
+      const response = await axios.post('https://twitter-qgxu.onrender.com/auth/otp', { email: user.email });
       if (response.data === 'sent otp') {
         setIsOtpSent(true);
         setOpenModal(true);
@@ -114,7 +114,7 @@ const TweetBox = () => {
   const verifyOtp = async () => {
     try {
       setOtp(otp1 + otp2 + otp3 + otp4);
-      const response = await axios.post('http://localhost:5000/auth/verify', { email: user.email, otp });
+      const response = await axios.post('https://twitter-qgxu.onrender.com/auth/verify', { email: user.email, otp });
       if (response.data === 'Verified') {
         setIsOtpVerified(true);
         setOpenModal(false);
@@ -332,7 +332,7 @@ const TweetBox = () => {
       return;
     }
     if (user.providerData[0].providerId === "password") {
-      fetch(`http://localhost:5000/auth/loggedInUser?email=${email}`)
+      fetch(`https://twitter-qgxu.onrender.com/auth/loggedInUser?email=${email}`)
         .then((res) => res.json())
         .then((data) => {
           setUsername(data[0].userName);
@@ -363,7 +363,7 @@ const TweetBox = () => {
       setPost("");
       setImageURL("");
       setVideoURL("");
-      fetch("http://localhost:5000/posts/post", {
+      fetch("https://twitter-qgxu.onrender.com/posts/post", {
         method: "POST",
         headers: {
           "content-type": "application/json",

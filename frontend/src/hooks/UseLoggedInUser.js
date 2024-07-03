@@ -8,7 +8,7 @@ const UseLoggedInUser = () => {
   const email = user?.email;
   const [loggedInUser, setLoggedInUser] = useState({});
   useEffect(() => {
-    fetch(`http://localhost:5000/auth/loggedInUser?email=${email}`)
+    fetch(`https://twitter-qgxu.onrender.com/auth/loggedInUser?email=${email}`)
       .then((res) => res.json())
       .then((data) => {
         setLoggedInUser(data);
