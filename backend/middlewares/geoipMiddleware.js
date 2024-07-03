@@ -7,7 +7,7 @@ app.use(requestIp.mw());
 
 const geoipMiddleware = (req, res, next) => {
   const ip = req.clientIp;
-  req.geoip = geoip.lookup(ip);
+  const geo = geoip.lookup(ip);
   req.geoip = geo;
   next();
 };
