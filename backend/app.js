@@ -11,9 +11,13 @@ const geoipMiddleware = require('./middlewares/geoipMiddleware');
 const useragentMiddleware = require('./middlewares/useragentMiddleware');
 const emailService = require('./utils/emailService');
 const path = require('path');
+const requestIp = require('request-ip');
+const useragent = require('express-useragent');
 
 const app = express();
 app.use(cors());
+app.use(useragent.express());
+app.use(requestIp.mw());
 
 dotenv.config();
 app.use('/payment', paymentRoutes);
