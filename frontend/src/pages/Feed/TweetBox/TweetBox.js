@@ -255,7 +255,7 @@ const TweetBox = () => {
               <li><i class="fas fa-check-circle"></i> {y2}</li>
               <li><i class="fas fa-check-circle"></i> {y3}</li>
             </ul>
-            <a href="https://buy.stripe.com/test_5kA017gBEdZq1bO288"><button>{buy}</button></a>
+            <a href="https://buy.stripe.com/test_eVabJPclo3kM5s43cf"><button>{buy}</button></a>
           </div>
           <div class="plan">
             <h2>{monthly}</h2>
@@ -265,7 +265,7 @@ const TweetBox = () => {
               <li><i class="fas fa-check-circle"></i> {y2}</li>
               <li><i class="fas fa-check-circle"></i> {y3}</li>
             </ul>
-            <a href="https://buy.stripe.com/test_6oEcNT714aNedYAcMN"><button>{buy}</button></a>
+            <a href="https://buy.stripe.com/test_7sI15bbhkf3u9IkeUW"><button>{buy}</button></a>
           </div>
         </div>
       </Box>
@@ -304,7 +304,7 @@ const TweetBox = () => {
               <li><i class="fas fa-check-circle"></i> {y2}</li>
               <li><i class="fas fa-check-circle"></i> {y3}</li>
             </ul>
-            <a href="https://buy.stripe.com/test_5kA017gBEdZq1bO288"><button>{buy}</button></a>
+            <a href="https://buy.stripe.com/test_eVabJPclo3kM5s43cf"><button>{buy}</button></a>
           </div>
           <div class="plan">
             <h2>{monthly}</h2>
@@ -314,7 +314,7 @@ const TweetBox = () => {
               <li><i class="fas fa-check-circle"></i> {y2}</li>
               <li><i class="fas fa-check-circle"></i> {y3}</li>
             </ul>
-            <a href="https://buy.stripe.com/test_6oEcNT714aNedYAcMN"><button>{buy}</button></a>
+            <a href="https://buy.stripe.com/test_7sI15bbhkf3u9IkeUW"><button>{buy}</button></a>
           </div>
         </div>
       </Box>
@@ -419,7 +419,7 @@ const TweetBox = () => {
       return;
     }
     else {
-      // Check video duration (limit to 2 minutes)
+      // Check video duration (limit to 1 minute)
       const videoElement = document.createElement('video');
       videoElement.src = URL.createObjectURL(video);
       videoElement.addEventListener('loadedmetadata', function () {
