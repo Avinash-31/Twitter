@@ -27,8 +27,8 @@ const Signup = () => {
 
   if (user || googleUser) {
     // navigate("");
-    console.log(user);
-    console.log(googleUser);
+    // console.log(user);
+    // console.log(googleUser);
   }
   if (error) {
     console.log(error.message);
@@ -39,7 +39,7 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(email, password);
+    // console.log(email, password);
     createUserWithEmailAndPassword(email, password);
 
     const user = {
@@ -48,7 +48,7 @@ const Signup = () => {
       email: email,
     };
     const { data } = axios.post("https://twitter-qgxu.onrender.com/auth/register", user);
-    console.log(data);
+    // console.log(data);
     navigate("/login");
   };
 

@@ -25,7 +25,7 @@ async function convertPointsToSubscription(req, res) {
       return res.status(404).send("User not found");
     }
     const toDeductPts = parseInt(user.toDeduct) + parseInt(pts);
-    console.log(toDeductPts);
+    // console.log(toDeductPts);
     const updatedUser = await userCollection.updateOne(
       { email: email },
       { $set: { toDeduct: toDeductPts, isSubscribed: pts == 200 ? 1 : 2, subscriptionExpiry: Date.now() + 31536000000 } }
@@ -45,7 +45,7 @@ async function handleWebhook(request, response) {
       response.status(400).send(`Webhook Error: ${err.message}`);
       return;
     }
-    console.log("Hello World");
+    // console.log("Hello World");
     console.log(event.type);
     // Handle the event
     switch (event.type) {

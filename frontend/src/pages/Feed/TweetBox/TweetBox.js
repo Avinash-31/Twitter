@@ -372,7 +372,7 @@ const TweetBox = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           // to reload the page
           // window.location.reload();
         })

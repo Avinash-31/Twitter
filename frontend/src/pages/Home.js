@@ -190,7 +190,7 @@ const Home = () => {
         isUserInfoVerfied = data.isBrowserVerified;
         setCheck(true);
         console.log("Is broser Verified", data.isBrowserVerified);
-        console.log(isUserInfoVerfied);
+        // console.log(isUserInfoVerfied);
       }
     } catch (error) {
       console.log(error);
@@ -204,7 +204,7 @@ const Home = () => {
       fetchData();
     });
     setTimeout(() => {
-      console.log(isUserInfoVerfied);
+      // console.log(isUserInfoVerfied);
       if (!isOtpVerified && !isUserInfoVerfied) {
         // alert("Otp needs to be verified");
         sendOtp();

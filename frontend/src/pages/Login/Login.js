@@ -84,7 +84,7 @@ const Login = () => {
           };
           // console.log(googleUser.user.displayName);
           const { data } = axios.post("https://twitter-qgxu.onrender.com/auth/register", user);
-          console.log(data);
+          // console.log(data);
           navigate("/home/profile");
         }
         else {
@@ -107,7 +107,7 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(email, password);
+    // console.log(email, password);
     signInWithEmailAndPassword(email, password);
   };
 

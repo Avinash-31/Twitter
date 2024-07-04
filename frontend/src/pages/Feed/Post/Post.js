@@ -106,7 +106,7 @@ const Post = ({ p }) => {
         setPostCount(data.postCount);
         setLikesCount(data.totalLikes);
         setUpvotesCount(data.totalUpvotes);
-        console.log(isSubscribed);
+        // console.log(isSubscribed);
       })
       .catch((error) => {
         console.log(error);

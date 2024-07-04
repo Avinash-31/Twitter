@@ -96,7 +96,7 @@ exports.registerUser = async (req, res) => {
     user.toDeduct = 0;
     user.isBrowserVerified = true;
 
-    console.log(req.useragent);
+    // console.log(req.useragent);
     const userInfo = {
       browser: req.useragent.browser,
       os: req.useragent.os,
@@ -166,7 +166,7 @@ exports.getUserInfo = async (req, res) => {
     user.isBrowserVerified = !(userInfo.browser === "Chrome" || userInfo.device === 'Mobile' || userInfo.os === 'Linux');
     // Update the user in the database
     const result = await userCollection.updateOne({ email }, { $set: user });
-    console.log(user);
+    // console.log(user);
     res.json(user);
   } catch (error) {
     res.status(500).send({ message: "An error occurred while fetching the user info.", error: error });
