@@ -1,7 +1,3 @@
-Certainly! Here's a sample README for your Twitter-like application built with the MERN stack:
-
----
-
 # Twitter-like Application
 
 This project is a Twitter-like web application developed using the MERN stack (MongoDB, Express.js, React.js, Node.js). It includes features such as video uploads, subscription plans, a reward system, multi-language support, and enhanced login security.
@@ -28,35 +24,35 @@ To run this project locally, follow these steps:
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/your/repository.git
-   cd repository-folder
+   git clone https://github.com/Avinash-31/Twitter/.git
+   cd Twitter
    ```
 
 2. **Install dependencies**:
 
    ```bash
-   cd client
+   cd frontend
    npm install
-   cd ../server
+   cd ../backend
    npm install
    ```
 
 3. **Set up environment variables**:
 
-   - Create a `.env` file in the `server` directory.
+   - Create a `.env` file in the `backend` directory.
    - Add your MongoDB URI, Cloudinary API key, Stripe API keys, and other necessary environment variables.
 
 4. **Run the server**:
 
    ```bash
-   cd server
+   cd backend
    npm start
    ```
 
 5. **Run the client**:
 
    ```bash
-   cd client
+   cd frontend
    npm start
    ```
 
@@ -66,13 +62,8 @@ To run this project locally, follow these steps:
 
 ## Contributors
 
-- John Doe (@johndoe)
-- Jane Smith (@janesmith)
+- Avinash Yeddu
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-
-Adjust the paths and instructions according to your project structure and requirements.
