@@ -140,10 +140,6 @@ async function handleWebhook(request, response) {
                     <div class="text-muted mb-2">Payment No.</div>
                     <strong>#${session.subscription}</strong>
                   </div>
-                  <div class="col-md-6 text-md-end"></div>
-                    <div class="text-muted mb-2">Payment Date</div>
-                    <strong>${new Date().toLocaleString()}</strong>
-                  </div>
                   </div>
                 </div>
 
