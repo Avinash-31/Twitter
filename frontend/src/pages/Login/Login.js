@@ -56,13 +56,22 @@ const Login = () => {
   );
   useEffect(() => {
     // fetch from router /time
+    const start = new Date(currTime.getFullYear(), currTime.getMonth(), currTime.getDate(), 9);
+    const end = new Date(currTime.getFullYear(), currTime.getMonth(), currTime.getDate(), 21);
+    const currTime = new Date();
     axios.get("https://twitter-qgxu.onrender.com/auth/time").then((res) => {
-      if (res.data === "Access granted") {
-        console.log("Access granted");
-        setAcess(true);
-        setOpenModal(false);
+      if (res.data === "Mobile") {
+        if (currTime >= start && currTime <= end) {
+          setAcess(true);
+          setOpenModal(false);
+        }
+        else {
+          setAcess(false);
+          // alert("Access denied!")
+          setOpenModal(true);
+        }
       }
-      else if(res.data === "Access denied") {
+      else if(res.data === "Desktop" || res.data === "Tablet") {
         setAcess(false);
         // alert("Access denied!")
         setOpenModal(true);

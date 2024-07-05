@@ -124,16 +124,16 @@ exports.checkTimeAndDevice = (req, res) => {
   const end = new Date(currTime.getFullYear(), currTime.getMonth(), currTime.getDate(), 21);
 
   const device= req.useragent.isDesktop ? "Desktop" : req.useragent.isMobile ? "Mobile" : "Tablet";
-  // res.json(device);
-  if (device === "Mobile") {
-    if (currTime >= start && currTime <= end) {
-      res.send('Access granted');
-    } else {
-      res.send('Access denied');
-    }
-  } else if(device==="Desktop" || device === "Tablet"){
-    res.send('Access granted');
-  }
+  res.json(device);
+  // if (device === "Mobile") {
+  //   if (currTime >= start && currTime <= end) {
+  //     res.send('Access granted');
+  //   } else {
+  //     res.send('Access denied');
+  //   }
+  // } else if(device==="Desktop" || device === "Tablet"){
+  //   res.send('Access granted');
+  // }
 };
 
 exports.getLoggedInUser = async (req, res) => {
