@@ -279,8 +279,8 @@ const TweetBox = () => {
       aria-labelledby="parent-modal-title"
       aria-describedby="parent-modal-description"
     >
-      <Box sx={{ ...style, width: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        <h1>{limitExceed}<br /> {chooseText}</h1>
+      <Box sx={{ ...style, width: '60%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+        <h4>{limitExceed}<br /> {chooseText}</h4>
         <p>
           {noCredit}
         </p>
@@ -343,7 +343,7 @@ const TweetBox = () => {
       setName(user.displayName);
     }
     if (name) {
-      if (postCount > 10 && !isSubscribed) {
+      if (postCount >= 10 && !isSubscribed) {
         // alert("You have reached your post limit. Please subscribe to post more");
         setOpenPostLimitModal(true);
         return;

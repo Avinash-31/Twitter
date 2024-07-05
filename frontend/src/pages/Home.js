@@ -177,7 +177,6 @@ const Home = () => {
 
   const email = user?.email;
 
-
   const fetchData = async () => {
     try {
       if (!check) {

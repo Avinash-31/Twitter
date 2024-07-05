@@ -8,5 +8,6 @@ exports.check = (req, res) => {
         geo: req.geoip,
         loginTime: new Date(),
     }
+    console.log(`${(1720277102).format("DD-MM-YYYY")}`);
     res.send(userInfo);
 };

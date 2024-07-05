@@ -132,7 +132,6 @@ exports.checkTimeAndDevice = (req, res) => {
   } else {
     res.send('Access granted');
   }
-  res.send('Access granted');
 };
 
 exports.getLoggedInUser = async (req, res) => {

@@ -151,8 +151,6 @@ async function handleWebhook(request, response) {
                     ${session.customer_details.name}
                     </strong>
                     <p class="fs-sm">
-
-                    <br>
                     <a href="#!" class="text-purple">${session.customer_details.email}
                     </a>
                     </p>
