@@ -129,7 +129,7 @@ exports.checkTimeAndDevice = (req, res) => {
     } else {
       res.send('Access denied');
     }
-  } else {
+  } else{
     res.send('Access granted');
   }
 };

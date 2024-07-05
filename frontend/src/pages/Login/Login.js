@@ -62,7 +62,7 @@ const Login = () => {
         setAcess(true);
         setOpenModal(false);
       }
-      else {
+      else if(res.data === "Access denied") {
         setAcess(false);
         // alert("Access denied!")
         setOpenModal(true);

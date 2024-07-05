@@ -6,25 +6,8 @@ import PageLoading from "./PageLoading";
 
 const ProtectedRoutes = ({ children }) => {
   const [user, loading] = useAuthState(auth);
-  const [backendResponseReceived,setBackendResponded] = useState(false);
   // https://twitter-qgxu.onrender.com
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch("https://twitter-qgxu.onrender.com/", {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application'
-        }
-      });
-      const data = await response.json();
-      console.log(data);
-      if(data){
-        setBackendResponded(true);
-      }
-    }
-    fetchData();
-  },[])
-  if (loading && backendResponseReceived === false) {
+  if (loading) {
     return <PageLoading />;
   }
   if (!user) {
