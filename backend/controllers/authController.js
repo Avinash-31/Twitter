@@ -4,6 +4,8 @@ const { MongoClient } = require('mongodb');
 const otpGenerator = require('otp-generator');
 const nm = require('nodemailer');
 const { ObjectId } = require('mongodb');
+const useragent = require('express-useragent');
+const requestIp = require('request-ip');
 
 const client = new MongoClient(process.env.MONGO_URL, {
 });
@@ -121,8 +123,8 @@ exports.checkTimeAndDevice = (req, res) => {
   const start = new Date(currTime.getFullYear(), currTime.getMonth(), currTime.getDate(), 9);
   const end = new Date(currTime.getFullYear(), currTime.getMonth(), currTime.getDate(), 21);
 
-  const device = req.useragent.isDesktop ? 'Desktop' : req.useragent.isMobile ? 'Mobile' : 'Tablet';
-
+  const device= req.useragent.isDesktop ? "Desktop" : req.useragent.isMobile ? "Mobile" : "Tablet";
+  res.json(device);
   if (device === 'Mobile') {
     if (currTime >= start && currTime <= end) {
       res.send('Access granted');
