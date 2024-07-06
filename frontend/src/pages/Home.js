@@ -44,13 +44,18 @@ const Home = () => {
     const interval = setInterval(() => {
       // fetch from router /time
       axios.get("https://twitter-qgxu.onrender.com/auth/time").then((res) => {
-        if (res.data === "Access granted") {
+        if (res.data === "Desktop" || res.data === "Tablet") {
           // do something
-        } else {
+        } else if (res.data === "Mobile") {
           // logout the user and redirect
-          signOut(auth).then(() => {
-            window.location.href = "/login";
-          });
+          const currTime = new Date();
+          const start = new Date(currTime.getFullYear(), currTime.getMonth(), currTime.getDate(), 9);
+          const end = new Date(currTime.getFullYear(), currTime.getMonth(), currTime.getDate(), 21);
+          if (currTime < start || currTime > end) {
+            signOut(auth).then(() => {
+              window.location.href = "/login";
+            });
+          }
         }
       });
     }, 10000);

@@ -16,7 +16,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [access, setAcess] = useState(true);
-  const[openModal,setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
 
   const [signInWithEmailAndPassword, user, loading, error] =
@@ -56,9 +56,9 @@ const Login = () => {
   );
   useEffect(() => {
     // fetch from router /time
+    const currTime = new Date();
     const start = new Date(currTime.getFullYear(), currTime.getMonth(), currTime.getDate(), 9);
     const end = new Date(currTime.getFullYear(), currTime.getMonth(), currTime.getDate(), 21);
-    const currTime = new Date();
     axios.get("https://twitter-qgxu.onrender.com/auth/time").then((res) => {
       if (res.data === "Mobile") {
         if (currTime >= start && currTime <= end) {
@@ -71,10 +71,9 @@ const Login = () => {
           setOpenModal(true);
         }
       }
-      else if(res.data === "Desktop" || res.data === "Tablet") {
-        setAcess(false);
-        // alert("Access denied!")
-        setOpenModal(true);
+      else if (res.data === "Desktop" || res.data === "Tablet") {
+        setAcess(true);
+        setOpenModal(false);
       }
     });
   });

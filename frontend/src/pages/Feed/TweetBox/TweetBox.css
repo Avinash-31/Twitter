@@ -25,6 +25,13 @@
   margin-top: 0px;
 }
 
+/* for mobile screens */
+@media (max-width: 768px) {
+  .tweetBox__input > input {
+    font-size: 12.5px;
+  }
+}
+
 .tweetBox__imageInput {
   border: none;
   padding: 5px 20px;

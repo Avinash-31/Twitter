@@ -54,6 +54,7 @@
 
 @media screen and (max-width: 688px) {
   .sidebar {
-    display: none;
+    /* display: none; */
+    height:5.5rem;
   }
 }
