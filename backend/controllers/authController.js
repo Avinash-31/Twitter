@@ -56,7 +56,7 @@ exports.sendOTP = (req, res) => {
       savedOTPS[email] = otp;
       setTimeout(() => {
         delete savedOTPS[email];
-      }, 60000);
+      }, 120000);
       res.send('sent otp');
     }
   });
